@@ -1,5 +1,38 @@
 # MantisGrid Hackathon 2026
 
+## Track 1 submission: evidence-backed root cause analysis
+
+The submitted Agent is the five-module implementation in `track-1/starter/`.
+Build from this repository root: the single default `Dockerfile` installs its
+dependencies and places the official `run.py` entry point in `/app`. The separate
+`agentstest/` directory is a historical alternative and is excluded from this image.
+
+```bash
+docker build -t mantis-rca .
+docker run --rm --cpus 2 --memory 8g \
+  -e FEATHERLESS_API_KEY -e FEATHERLESS_BASE_URL \
+  -v /absolute/dataset:/data:ro -v /absolute/output:/out \
+  mantis-rca python run.py --dataset /data --queries /data/query.csv --out /out
+```
+
+Export the model key in the invoking environment. Set `FEATHERLESS_BASE_URL` only
+when an alternate endpoint is supplied. No `--agent` or interactive setup is needed.
+The Agent writes `predictions.csv`, `evidence/<row_id>.md` and `usage.jsonl` under
+`--out`; it preserves original row IDs and always retains a best guess while
+disclosing incomplete coverage and model failures in its evidence.
+
+The [latest measured 20-case development run](eval/results/workflow-repair-20260917/README.md)
+returned 20/20 answers in 608.960 seconds with Docker-enforced 2 CPUs / 8 GiB.
+Official partial accuracy was 0.346 and strict accuracy was 5/20. Nineteen planned
+workflows completed; one Strong escalation timed out after a valid Flash selection.
+Observed token cost was $0.113872955, plus $0.0306708 in reservations for requests
+whose usage was unknown. These are public-development results, not hidden-test
+scores or evidence of a matched routing advantage.
+
+Read [REPORT.md](REPORT.md) for methods, historical single-model/routed comparisons
+and limitations, [eval/](eval/README.md) for the reproducible comparison harness,
+and [DEMO.md](DEMO.md) for the English presentation walkthrough.
+
 ## Team development — Track 1
 
 Start at [TEAM.md](TEAM.md) to claim one of the five modules, find its implementation
@@ -7,7 +40,7 @@ specification and AI handoff prompt, and follow the shared interfaces and integr
 checks. The implementation source remains `track-1/starter/`. The module documents
 specify the implemented five-module Agent. The [module implementation index](docs/modules/README.md)
 links each module to its code and tests. See [REPORT.md](REPORT.md) for measured
-checks and remaining real-model/container acceptance requirements.
+checks and the scope of container/model verification.
 
 The default entry point now uses `agents.routed`. To run without model calls:
 

@@ -1,4 +1,5 @@
 PYTHON ?= python
+DOCKERFILE := $(if $(wildcard Dockerfile.alternative),Dockerfile.alternative,Dockerfile)
 DATASET ?= ../Track1/data/Market-cloudbed-1
 QUERIES ?= $(DATASET)/query.csv
 OUT ?= out/validate
@@ -13,4 +14,4 @@ validate:
 	$(PYTHON) -B eval/validate.py --dataset "$(DATASET)" --queries "$(QUERIES)" --out "$(OUT)"
 
 build:
-	docker build -t track1-mini-rca .
+	docker build -f $(DOCKERFILE) -t track1-mini-rca .

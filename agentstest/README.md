@@ -1,5 +1,12 @@
 # Track 1: small evidence-retrieval RCA agent
 
+This directory preserves a separate historical alternative. It is excluded from the
+official image; the submitted five-module agent, report and evaluation are linked
+from the [repository README](../README.md). Its optional build recipe is named
+`Dockerfile.alternative` so the repository has one default Dockerfile.
+The standalone exporter restores the filename `Dockerfile`; build an exported
+copy with `docker build -t track1-mini-rca .` or `make build`.
+
 This submission diagnoses root-cause time, component and failure type from the supplied microservice telemetry. It uses deterministic DuckDB tools for retrieval, GLM for diagnosis, and code for output validation. Only the Controller calls a model; the Executor and Verifier are code.
 
 **The judged three-argument command defaults to the routed agent.** Offline mode is an explicitly selected development baseline. The current revision has 80 passing local tests, including real process-tree termination and deadline recovery on Windows. The public CLI supervises case and run wall-clock limits; Docker resource certification and a repeated live routed/single comparison remain pending. See [REPORT.md](REPORT.md).
@@ -9,7 +16,7 @@ This submission diagnoses root-cause time, component and failure type from the s
 Use this directory as the repository root or export it with `package_submission.py`. Do not submit the surrounding development workspace, which contains other Dockerfiles and datasets.
 
 ```bash
-docker build -t track1-mini-rca .
+docker build -f Dockerfile.alternative -t track1-mini-rca .
 docker run --rm --cpus=2 --memory=8g \
   -e FEATHERLESS_API_KEY -e FEATHERLESS_BASE_URL \
   -v /absolute/dataset:/data:ro -v /absolute/output:/out \

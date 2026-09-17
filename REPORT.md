@@ -10,6 +10,21 @@ The default CLI completed in **608.960 seconds** under Docker-enforced **2 CPUs 
 
 This checkpoint removes repeated window scans and arbitrary trace/metric-result cutoffs, corrects candidate strength/evidence handling, and separates workflow completion from formatted-output validity. Offline discovery passed 178 tests with five real checks skipped; those five were separately run and passed. A six-transform sample from the new 4,920-record row-0 ledger replayed exactly, with all 34 sampled locators found. Full 70-case accuracy, repeated variance, a new matched single-model comparison and causal review are not established by this run. Detailed evidence, immutable runtime hashes and limitations are in the linked checkpoint.
 
+## Submission packaging verification
+
+The merged five-module runtime passed all **183 tests in 34.638 seconds**, including
+the five real-telemetry checks with no skips. The unmodified official submission
+validator passed two real cases with zero warnings. The root image built successfully
+and ran two cases through the default `agents.routed` entry point under Docker-enforced
+2 CPUs / 8 GiB, read-only data/root filesystem and disabled networking. Both answers
+and four-section evidence files were present; this fallback smoke made zero model
+requests. All 22 runtime source hashes match the preceding 20-case model experiment.
+The packaging changes do not claim new accuracy or model-routing improvements.
+See the [verification record](eval/results/submission-ready-20260917/README.md).
+
+The root Dockerfile is the sole default build recipe. The separate `agentstest/`
+alternative is excluded from its context and is not part of this submitted Agent.
+
 ## Actual development results
 
 | Experiment | Planned / returned | Official mean partial | Fully solved | External elapsed | Actual model requests | Estimated cost |

@@ -17,7 +17,7 @@ def export(destination):
     if destination==ROOT or destination in ROOT.parents:
         raise ValueError('Destination must be a new directory, never a source parent')
     if destination.exists() or destination.with_suffix('.zip').exists():raise FileExistsError('Use a new destination')
-    selected=[ROOT/name for name in FILES]
+    selected=[ROOT/('Dockerfile.alternative' if name == 'Dockerfile' and (ROOT/'Dockerfile.alternative').is_file() else name) for name in FILES]
     for folder in FOLDERS:
         selected.extend(p for p in (ROOT/folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix in {'.py','.md','.json','.csv','.txt'})
     for path in selected:
@@ -26,7 +26,8 @@ def export(destination):
     destination.mkdir(parents=True)
     hashes={}
     for path in selected:
-        relative=path.relative_to(ROOT);target=destination/relative
+        relative=Path('Dockerfile') if path.name == 'Dockerfile.alternative' else path.relative_to(ROOT)
+        target=destination/relative
         target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
         hashes[relative.as_posix()]=hashlib.sha256(target.read_bytes()).hexdigest()
     (destination/'EXPORT_MANIFEST.json').write_text(json.dumps({'files':hashes,'note':'Source artifact only; no claim of Docker build, live validation, publication or submission.'},indent=2),encoding='utf-8')
