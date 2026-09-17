@@ -1,0 +1,6 @@
+{
+  "start": "2022-03-20 09:00:00",
+  "end": "2022-03-20 09:30:00",
+  "sources": ["metric_container", "metric_node"],
+  "top_k": 8
+}

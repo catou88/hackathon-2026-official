@@ -1,0 +1,4 @@
+[
+  {"id":"generic-network-ambiguity","kind":"generic-investigation-pattern","text":"When several services become slow with flat resource KPIs, compare parent-child start gaps and operation latency across the candidate neighborhood. Seek proxy errors and unaffected peers before choosing a network failure subtype. This is an investigation pattern, not a labeled incident."},
+  {"id":"generic-node-versus-pod","kind":"generic-investigation-pattern","text":"When both a node and a pod are anomalous, check whether sibling pods on the node share the onset. A shared onset can motivate a node-level hypothesis, but correlated symptoms alone are insufficient. This card contains no benchmark answers."}
+]

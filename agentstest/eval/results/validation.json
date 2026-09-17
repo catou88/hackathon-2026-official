@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-17",
+  "tests_passed": 80,
+  "official_validator": {
+    "passed": true,
+    "cases": 2,
+    "selector": "mini_rca.adapter",
+    "mode": "routed",
+    "credentials": "removed from child environment",
+    "model_calls": 0,
+    "limits": "Shape-only test with missing-key fallback; not live endpoint validation."
+  },
+  "synthetic_default_route_test": true,
+  "docker_cli_available": false,
+  "docker_build_verified": false,
+  "live_revision_verified": true,
+  "publication_verified": false,
+  "presentation_recorded": false,
+  "submission_verified": false,
+  "live_revision_scope": "Frozen pre-retrieval-change hard-timeout baseline, offline 70 plus routed 70. Later interrupted-resume/CSV fixes have local regression coverage.",
+  "full_live_comparison_verified": true,
+  "hard_deadline_verified": true,
+  "evaluation_harness_tests_passed": 5,
+  "hard_deadline_platform": "Windows only; direct adapter callers need outer supervision",
+  "full_live_comparison_scope": "One same-RAG offline vs routed development pass; repeated single/routed comparison remains unverified.",
+  "retrieval_revision_verified": false
+}
