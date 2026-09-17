@@ -11,4 +11,3 @@
 **/*.parquet
 **/*.pkl
 track-1/starter/tests
-agentstest
