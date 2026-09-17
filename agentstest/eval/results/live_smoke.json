@@ -1,0 +1,373 @@
+{
+  "date": "2026-09-17",
+  "tests_passed": 52,
+  "runs": [
+    {
+      "name": "offline",
+      "cases": [
+        {
+          "row_id": 0,
+          "mode": "offline-fallback",
+          "wall_s": 6.297,
+          "cost_dollars": 0.0,
+          "differs_from_heuristic": false,
+          "route_events": [],
+          "decision_events": [],
+          "model_events": [],
+          "partial": 0.5,
+          "strict": false
+        },
+        {
+          "row_id": 1,
+          "mode": "offline-fallback",
+          "wall_s": 5.25,
+          "cost_dollars": 0.0,
+          "differs_from_heuristic": false,
+          "route_events": [],
+          "decision_events": [],
+          "model_events": [],
+          "partial": 1.0,
+          "strict": true
+        }
+      ],
+      "summary": {
+        "requested": 2,
+        "completed": 2,
+        "valid_predictions": 2,
+        "run_wall_s": 11.578,
+        "cumulative_wall_s": 11.588,
+        "run_cost_dollars": 0,
+        "invocation_cost_dollars": 0,
+        "io_errors": [],
+        "cost_note": "Competition rates; pending/unknown attempts conservatively reserved. Resume totals include prior costs."
+      },
+      "strict": 0.5,
+      "partial": 0.75,
+      "shape_validation": {
+        "cases": 2,
+        "shape_valid": true,
+        "scope": "Output contract, not diagnosis accuracy or resource certification"
+      }
+    },
+    {
+      "name": "routed-network",
+      "cases": [
+        {
+          "row_id": 0,
+          "mode": "offline-fallback",
+          "wall_s": 83.391,
+          "cost_dollars": 0.001866405,
+          "differs_from_heuristic": false,
+          "route_events": [
+            {
+              "stage": "initial",
+              "model": "zai-org/GLM-4.7-Flash",
+              "tier": "fast",
+              "reasons": [],
+              "policy": "Single-failure complete evidence starts cheap; retrieval/low confidence may escalate once.",
+              "candidate_components": 8
+            },
+            {
+              "stage": "final",
+              "model": "zai-org/GLM-4.7-Flash",
+              "reasons": [
+                "contract_repair_same_model"
+              ]
+            }
+          ],
+          "decision_events": [
+            {
+              "round": 1,
+              "requested_model": "zai-org/GLM-4.7-Flash",
+              "status": "rejected",
+              "failure_kind": "output_contract",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "attempts": [
+                1
+              ]
+            },
+            {
+              "round": 2,
+              "requested_model": "zai-org/GLM-4.7-Flash",
+              "status": "rejected",
+              "failure_kind": "output_contract",
+              "error_type": "ProtocolError",
+              "error": "Output truncated; provide a shorter complete JSON answer",
+              "attempts": [
+                2
+              ]
+            }
+          ],
+          "model_events": [
+            {
+              "model": "zai-org/GLM-4.7-Flash",
+              "attempt": 1,
+              "retry": 0,
+              "reserved_dollars": 0.002562145,
+              "status": "failed",
+              "response_file": "model_responses/0/01.json",
+              "usage_estimated": false,
+              "cost_dollars": 0.000926465,
+              "prompt_tokens": 8881,
+              "completion_tokens": 873,
+              "finish_reason": "stop",
+              "failure_kind": "output_format",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "seconds": 29.797
+            },
+            {
+              "model": "zai-org/GLM-4.7-Flash",
+              "attempt": 2,
+              "retry": 0,
+              "reserved_dollars": 0.0021631750000000003,
+              "status": "failed",
+              "response_file": "model_responses/0/02.json",
+              "usage_estimated": false,
+              "cost_dollars": 0.00093994,
+              "prompt_tokens": 7076,
+              "completion_tokens": 1200,
+              "finish_reason": "length",
+              "failure_kind": "output_format",
+              "error_type": "ProtocolError",
+              "error": "Output truncated; provide a shorter complete JSON answer",
+              "seconds": 46.593
+            }
+          ],
+          "partial": 0.5,
+          "strict": false
+        },
+        {
+          "row_id": 1,
+          "mode": "offline-fallback",
+          "wall_s": 74.828,
+          "cost_dollars": 0.008179049999999997,
+          "differs_from_heuristic": false,
+          "route_events": [
+            {
+              "stage": "initial",
+              "model": "zai-org/GLM-4.7",
+              "tier": "strong",
+              "reasons": [
+                "incomplete_telemetry"
+              ],
+              "policy": "Single-failure complete evidence starts cheap; retrieval/low confidence may escalate once.",
+              "candidate_components": 6
+            },
+            {
+              "stage": "final",
+              "model": "zai-org/GLM-4.7",
+              "reasons": [
+                "contract_repair_same_model"
+              ]
+            }
+          ],
+          "decision_events": [
+            {
+              "round": 1,
+              "requested_model": "zai-org/GLM-4.7",
+              "status": "rejected",
+              "failure_kind": "output_contract",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "attempts": [
+                1
+              ]
+            },
+            {
+              "round": 2,
+              "requested_model": "zai-org/GLM-4.7",
+              "status": "rejected",
+              "failure_kind": "output_contract",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "attempts": [
+                2
+              ]
+            }
+          ],
+          "model_events": [
+            {
+              "model": "zai-org/GLM-4.7",
+              "attempt": 1,
+              "retry": 0,
+              "reserved_dollars": 0.0184921,
+              "status": "failed",
+              "response_file": "model_responses/1/01.json",
+              "usage_estimated": false,
+              "cost_dollars": 0.0045341999999999995,
+              "prompt_tokens": 7696,
+              "completion_tokens": 137,
+              "finish_reason": "stop",
+              "failure_kind": "output_format",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "seconds": 24.0
+            },
+            {
+              "model": "zai-org/GLM-4.7",
+              "attempt": 2,
+              "retry": 0,
+              "reserved_dollars": 0.015116200000000002,
+              "status": "failed",
+              "response_file": "model_responses/1/02.json",
+              "usage_estimated": false,
+              "cost_dollars": 0.0036448500000000003,
+              "prompt_tokens": 5891,
+              "completion_tokens": 184,
+              "finish_reason": "stop",
+              "failure_kind": "output_format",
+              "error_type": "ProtocolError",
+              "error": "No JSON object in response",
+              "seconds": 27.656
+            }
+          ],
+          "partial": 1.0,
+          "strict": true
+        }
+      ],
+      "summary": {
+        "requested": 2,
+        "completed": 2,
+        "valid_predictions": 2,
+        "run_wall_s": 158.265,
+        "cumulative_wall_s": 158.258,
+        "run_cost_dollars": 0.010045454999999998,
+        "invocation_cost_dollars": 0.010045454999999998,
+        "io_errors": [],
+        "cost_note": "Competition rates; pending/unknown attempts conservatively reserved. Resume totals include prior costs."
+      },
+      "strict": 0.5,
+      "partial": 0.75,
+      "shape_validation": {
+        "cases": 2,
+        "shape_valid": true,
+        "scope": "Output contract, not diagnosis accuracy or resource certification"
+      }
+    },
+    {
+      "name": "routed-compatible",
+      "cases": [
+        {
+          "row_id": 0,
+          "mode": "routed-model",
+          "wall_s": 12.344,
+          "cost_dollars": 0.0006364000000000001,
+          "differs_from_heuristic": false,
+          "route_events": [
+            {
+              "stage": "initial",
+              "model": "zai-org/GLM-4.7-Flash",
+              "tier": "fast",
+              "reasons": [],
+              "policy": "Single-failure complete evidence starts cheap; retrieval/low confidence may escalate once.",
+              "candidate_components": 8
+            }
+          ],
+          "decision_events": [
+            {
+              "round": 1,
+              "requested_model": "zai-org/GLM-4.7-Flash",
+              "status": "verified",
+              "normalizations": [],
+              "adopted": true,
+              "attempts": [
+                1
+              ]
+            }
+          ],
+          "model_events": [
+            {
+              "model": "zai-org/GLM-4.7-Flash",
+              "attempt": 1,
+              "retry": 0,
+              "reserved_dollars": 0.002562145,
+              "status": "ok",
+              "response_file": "model_responses/0/01.json",
+              "usage_estimated": false,
+              "cost_dollars": 0.0006364000000000001,
+              "prompt_tokens": 8880,
+              "completion_tokens": 148,
+              "finish_reason": "stop",
+              "response_channel": "reasoning",
+              "seconds": 5.391
+            }
+          ],
+          "partial": 0.5,
+          "strict": false
+        }
+      ],
+      "summary": {
+        "requested": 1,
+        "completed": 1,
+        "valid_predictions": 1,
+        "run_wall_s": 12.36,
+        "cumulative_wall_s": 12.361,
+        "run_cost_dollars": 0.0006364000000000001,
+        "invocation_cost_dollars": 0.0006364000000000001,
+        "io_errors": [],
+        "cost_note": "Competition rates; pending/unknown attempts conservatively reserved. Resume totals include prior costs."
+      },
+      "strict": 0.0,
+      "partial": 0.5,
+      "shape_validation": {
+        "cases": 1,
+        "shape_valid": true,
+        "scope": "Output contract, not diagnosis accuracy or resource certification"
+      }
+    }
+  ],
+  "provider_compatibility": "Empty content with standalone JSON in message.reasoning; patched and confirmed on row 0. Content remains preferred; all answer checks retained.",
+  "accounting": {
+    "known_usage_estimate_dollars": 0.01068549,
+    "unknown_reservations_dollars": 0.02400193,
+    "combined_dollars": 0.03468742,
+    "cap_dollars": 0.05,
+    "basis": "Competition rates, not verified account billing. Failed sandbox connections and failed first diagnostic reader retained conservatively."
+  },
+  "confirmed_limitations": [
+    "Hard whole-case and run deadlines not enforced by SDK timeout; initial cases exceeded 55 seconds and run exceeded 150 seconds.",
+    "No score improvement observed.",
+    "Only row 0 rerun after compatibility fix; strong model and repeated routed-vs-single comparison remain unverified.",
+    "Development smoke test; no held-out, hidden-deployment or container resource claims."
+  ],
+  "source_hashes_before_compatibility": {
+    "mini_rca/adapter.py": "c5548678f561c7a6b6821f4ca2b63a72ab30ec0c223a46ed9d81f56d74de88b7",
+    "mini_rca/agents.py": "bc100ad605f1b918da67d186158898ba52712b0237abc998663863593c7aeb58",
+    "mini_rca/case.py": "61251504c6be62f9c0f28d0a44c9bb839e0e8a0bb40ff0ce0e86cd330b42a69b",
+    "mini_rca/cli.py": "60c5553f034c32a7ae37c10ac9d7e114b49012759598a206efbd0cef437ee07f",
+    "mini_rca/config.py": "35d7a74378ef751e48e418881cea0e39731fb8a330c795e3b44a7839cb99417b",
+    "mini_rca/llm.py": "e1afb5077a7a00e958de97b9460b8fd151ab6d281ad9cbab20a0b333e867bd8c",
+    "mini_rca/protocol.py": "5e9fda6222072ddab3ea7d813ad80865f4e0304ede38a4d35616c4b0aa7bb769",
+    "mini_rca/routing.py": "222a035c08886ef951d0f58e8f142e540a603f0feb62fdcf2829071194d0caba",
+    "mini_rca/store.py": "710ab5d7bc093e2d58a49a91fe203246f4ec7e72171d1d51dcc0e4ce8b350411",
+    "mini_rca/tools.py": "7495b5213a0dd164489c30adfcc8cc3d49d269412bfd236fceea9d8be41f8778",
+    "mini_rca/verifier.py": "9b3844ff9aa9c7b4c04153d45b18ae700198791626771cb30d52dfa37b477dad",
+    "mini_rca/__init__.py": "110a72105c82d2e397e23724f6a9a6d8b2e4f417e2a172ab5e16caa334ddb950",
+    "prompts/controller.md": "4ea77733da64356c29d4c0228fea62850f982114d9c845dd6aff2b34977b849c",
+    "prompts/executor.md": "d4c70a945123e933ff2928e96666bfaf575e086d6fc7b473164cda3a9d285a2e",
+    "prompts/verifier.md": "04e176ed0712eb80b8f119cbe0b757cba7fd106e23ccd424d65ec0ddbb9c0d62",
+    "knowledge/domain.json": "f53284d6caba313ab174db59c1966594f940b5793254b78992d1a62dac316a4a",
+    "knowledge/experiences.json": "a44b449dc32930997ca94632e4ce8c3d30a9939d3086abc0f5afa48c52ec77c4"
+  },
+  "source_hashes_after_compatibility": {
+    "mini_rca/adapter.py": "c5548678f561c7a6b6821f4ca2b63a72ab30ec0c223a46ed9d81f56d74de88b7",
+    "mini_rca/agents.py": "bc100ad605f1b918da67d186158898ba52712b0237abc998663863593c7aeb58",
+    "mini_rca/case.py": "61251504c6be62f9c0f28d0a44c9bb839e0e8a0bb40ff0ce0e86cd330b42a69b",
+    "mini_rca/cli.py": "60c5553f034c32a7ae37c10ac9d7e114b49012759598a206efbd0cef437ee07f",
+    "mini_rca/config.py": "35d7a74378ef751e48e418881cea0e39731fb8a330c795e3b44a7839cb99417b",
+    "mini_rca/llm.py": "290c2f09b23311cbdd5ab1561cd176de488a3f1fde121854d51b44e693849d33",
+    "mini_rca/protocol.py": "5e9fda6222072ddab3ea7d813ad80865f4e0304ede38a4d35616c4b0aa7bb769",
+    "mini_rca/routing.py": "222a035c08886ef951d0f58e8f142e540a603f0feb62fdcf2829071194d0caba",
+    "mini_rca/store.py": "710ab5d7bc093e2d58a49a91fe203246f4ec7e72171d1d51dcc0e4ce8b350411",
+    "mini_rca/tools.py": "7495b5213a0dd164489c30adfcc8cc3d49d269412bfd236fceea9d8be41f8778",
+    "mini_rca/verifier.py": "9b3844ff9aa9c7b4c04153d45b18ae700198791626771cb30d52dfa37b477dad",
+    "mini_rca/__init__.py": "110a72105c82d2e397e23724f6a9a6d8b2e4f417e2a172ab5e16caa334ddb950",
+    "prompts/controller.md": "4ea77733da64356c29d4c0228fea62850f982114d9c845dd6aff2b34977b849c",
+    "prompts/executor.md": "d4c70a945123e933ff2928e96666bfaf575e086d6fc7b473164cda3a9d285a2e",
+    "prompts/verifier.md": "04e176ed0712eb80b8f119cbe0b757cba7fd106e23ccd424d65ec0ddbb9c0d62",
+    "knowledge/domain.json": "f53284d6caba313ab174db59c1966594f940b5793254b78992d1a62dac316a4a",
+    "knowledge/experiences.json": "a44b449dc32930997ca94632e4ce8c3d30a9939d3086abc0f5afa48c52ec77c4"
+  }
+}

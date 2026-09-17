@@ -1,0 +1,150 @@
+{
+  "revision": "Historical pre-reliability and pre-submission fixes",
+  "row_ids": [
+    0,
+    1,
+    4,
+    5,
+    8,
+    9,
+    25
+  ],
+  "repeats": 1,
+  "groups": {
+    "starter_heuristic": {
+      "cases": 7,
+      "strict_correct": 0,
+      "partial_mean": 0.07142857142857142,
+      "case_wall_total_s": 7.73,
+      "mean_s": 1.1042857142857143,
+      "median_s": 1.04,
+      "p95_s": 2.067999999999999,
+      "run_wall_s": null,
+      "tool_s": 0.0,
+      "model_s": 0.0,
+      "accounted_dollars": 0.0,
+      "known_usage_dollars": 0.0,
+      "unknown_reserved_dollars": 0.0,
+      "model_verified_cases": 0,
+      "model_attempts": 0,
+      "json_ok_responses": 0,
+      "model_failed_responses": 0,
+      "model_errors": {},
+      "modes": {
+        "heuristic": 7
+      },
+      "model_usage": {},
+      "nonempty_predictions": 6,
+      "tool_calls": 0,
+      "tool_failures": 0,
+      "cost_per_strict_correct": null
+    },
+    "rag_offline": {
+      "cases": 7,
+      "strict_correct": 2,
+      "partial_mean": 0.45285714285714285,
+      "case_wall_total_s": 36.077,
+      "mean_s": 5.1538571428571425,
+      "median_s": 5.016,
+      "p95_s": 5.852399999999999,
+      "run_wall_s": 36.109,
+      "tool_s": 36.077,
+      "model_s": 0.0,
+      "accounted_dollars": 0.0,
+      "known_usage_dollars": 0.0,
+      "unknown_reserved_dollars": 0.0,
+      "model_verified_cases": 0,
+      "model_attempts": 0,
+      "json_ok_responses": 0,
+      "model_failed_responses": 0,
+      "model_errors": {},
+      "modes": {
+        "offline-fallback": 7
+      },
+      "model_usage": {},
+      "nonempty_predictions": 7,
+      "tool_calls": 49,
+      "tool_failures": 0,
+      "cost_per_strict_correct": 0.0
+    },
+    "A_single_flash": {
+      "cases": 7,
+      "strict_correct": 2,
+      "partial_mean": 0.45285714285714285,
+      "case_wall_total_s": 54.139,
+      "mean_s": 7.734142857142857,
+      "median_s": 5.109,
+      "p95_s": 15.207399999999998,
+      "run_wall_s": 54.203,
+      "tool_s": 35.984,
+      "model_s": 17.187,
+      "accounted_dollars": 0.00125534,
+      "known_usage_dollars": 0.0012553400000000002,
+      "unknown_reserved_dollars": 0.0,
+      "model_verified_cases": 0,
+      "model_attempts": 2,
+      "json_ok_responses": 0,
+      "model_failed_responses": 2,
+      "model_errors": {
+        "JSONDecodeError": 2
+      },
+      "modes": {
+        "offline-fallback": 7
+      },
+      "model_usage": {
+        "zai-org/GLM-4.7-Flash": {
+          "calls": 2,
+          "prompt_tokens": 16796,
+          "completion_tokens": 409
+        }
+      },
+      "nonempty_predictions": 7,
+      "tool_calls": 49,
+      "tool_failures": 0,
+      "cost_per_strict_correct": 0.00062767
+    },
+    "B_routed_strong": {
+      "cases": 7,
+      "strict_correct": 2,
+      "partial_mean": 0.45285714285714285,
+      "case_wall_total_s": 222.75,
+      "mean_s": 31.821428571428573,
+      "median_s": 35.187,
+      "p95_s": 45.3097,
+      "run_wall_s": 222.813,
+      "tool_s": 61.547,
+      "model_s": 160.21699999999998,
+      "accounted_dollars": 0.1488162,
+      "known_usage_dollars": 0.1488162,
+      "unknown_reserved_dollars": 0.0,
+      "model_verified_cases": 5,
+      "model_attempts": 14,
+      "json_ok_responses": 12,
+      "model_failed_responses": 2,
+      "model_errors": {
+        "JSONDecodeError": 2
+      },
+      "modes": {
+        "routed-model": 5,
+        "offline-fallback": 2
+      },
+      "model_usage": {
+        "zai-org/GLM-5.2": {
+          "calls": 9,
+          "prompt_tokens": 82069,
+          "completion_tokens": 2104
+        },
+        "zai-org/GLM-4.6": {
+          "calls": 5,
+          "prompt_tokens": 40224,
+          "completion_tokens": 1154
+        }
+      },
+      "nonempty_predictions": 7,
+      "tool_calls": 59,
+      "tool_failures": 1,
+      "cost_per_strict_correct": 0.0744081
+    }
+  },
+  "limits": "No current live comparison. A fell back in every case; no causal model-quality claim. Original source outputs remain in the development workspace."
+}

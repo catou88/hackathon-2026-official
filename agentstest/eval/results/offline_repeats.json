@@ -1,0 +1,63 @@
+{
+  "runs": [
+    {
+      "mode": "offline",
+      "repeat": 1,
+      "strict": 0.2857142857142857,
+      "partial": 0.45285714285714285,
+      "coverage": 1.0,
+      "seconds_per_case": 5.2054285714285715,
+      "dollars_per_case": 0.0,
+      "model_adoption_rate": 0.0
+    },
+    {
+      "mode": "offline",
+      "repeat": 2,
+      "strict": 0.2857142857142857,
+      "partial": 0.45285714285714285,
+      "coverage": 1.0,
+      "seconds_per_case": 5.334857142857143,
+      "dollars_per_case": 0.0,
+      "model_adoption_rate": 0.0
+    },
+    {
+      "mode": "offline",
+      "repeat": 3,
+      "strict": 0.2857142857142857,
+      "partial": 0.45285714285714285,
+      "coverage": 1.0,
+      "seconds_per_case": 5.848142857142856,
+      "dollars_per_case": 0.0,
+      "model_adoption_rate": 0.0
+    }
+  ],
+  "aggregate": {
+    "offline": {
+      "strict": {
+        "mean": 0.2857142857142857,
+        "stdev": 0.0
+      },
+      "partial": {
+        "mean": 0.45285714285714285,
+        "stdev": 0.0
+      },
+      "coverage": {
+        "mean": 1.0,
+        "stdev": 0.0
+      },
+      "seconds_per_case": {
+        "mean": 5.462809523809524,
+        "stdev": 0.3399253919742436
+      },
+      "dollars_per_case": {
+        "mean": 0.0,
+        "stdev": 0.0
+      },
+      "model_adoption_rate": {
+        "mean": 0.0,
+        "stdev": 0.0
+      }
+    }
+  },
+  "limits": "Development cases only; no hidden-deployment or container-resource certification."
+}
