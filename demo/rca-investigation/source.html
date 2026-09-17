@@ -1,0 +1,224 @@
+<div id="rca-demo" aria-label="Root cause investigation dashboard design">
+  <style>
+    #rca-demo { color-scheme:light dark; --rca-bg:light-dark(#f3f6f9,#111c25); --rca-panel:light-dark(#ffffff,#192733); --rca-text:light-dark(#172735,#edf4f8); --rca-muted:light-dark(#526575,#a9bdcb); --rca-line:light-dark(#dbe4eb,#354856); --rca-teal:light-dark(#008b83,#52cfc3); --rca-blue:light-dark(#3b78ce,#79acfa); --rca-gold:light-dark(#a56b06,#e5b75c); --rca-soft:light-dark(#e6f6f3,#173c3b); --rca-warn:light-dark(#fff5df,#3a3021); font:14px/1.45 "Segoe UI","Microsoft YaHei",sans-serif; color:var(--rca-text); background:var(--rca-bg); border:1px solid var(--rca-line); border-radius:14px; overflow:hidden; width:100%; box-sizing:border-box; }
+    #rca-demo * { box-sizing:border-box; }
+    #rca-demo button { font:inherit; color:inherit; cursor:pointer; }
+    #rca-demo button:disabled { opacity:.45; cursor:default; }
+    #rca-demo .rca-header { padding:20px 22px 16px; background:var(--rca-panel); border-bottom:1px solid var(--rca-line); }
+    #rca-demo .rca-headrow, #rca-demo .rca-titleline, #rca-demo .rca-actions, #rca-demo .rca-panelhead, #rca-demo .rca-keyline { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    #rca-demo .rca-headrow { justify-content:space-between; }
+    #rca-demo h1 { font-size:22px; font-weight:600; letter-spacing:-.5px; line-height:1.3; margin:0; }
+    #rca-demo h2 { font-size:16px; font-weight:600; margin:0; }
+    #rca-demo h3 { font-size:13px; font-weight:600; margin:0 0 6px; }
+    #rca-demo .rca-sub { color:var(--rca-muted); font-size:12px; margin-top:7px; }
+    #rca-demo .rca-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border:1px solid var(--rca-line); border-radius:5px; color:var(--rca-muted); font-size:11px; }
+    #rca-demo .rca-illustrative { background:var(--rca-warn); color:var(--rca-gold); border-color:transparent; }
+    #rca-demo .rca-action { border:1px solid var(--rca-line); border-radius:7px; padding:7px 11px; background:var(--rca-panel); min-height:36px; }
+    #rca-demo .rca-action.primary { background:var(--rca-teal); color:light-dark(#fff,#072a28); border-color:transparent; }
+    #rca-demo .rca-runtime { display:flex; flex-wrap:wrap; gap:9px 20px; align-items:center; padding-top:13px; margin-top:13px; border-top:1px solid var(--rca-line); color:var(--rca-muted); font-size:12px; }
+    #rca-demo .rca-runtime strong { color:var(--rca-text); font-weight:600; font-variant-numeric:tabular-nums; }
+    #rca-demo .rca-main { display:grid; grid-template-columns:minmax(210px,28%) minmax(0,1fr); gap:13px; padding:14px; }
+    #rca-demo .rca-pane { border:1px solid var(--rca-line); background:var(--rca-panel); border-radius:9px; min-width:0; }
+    #rca-demo .rca-process { padding:16px; }
+    #rca-demo .rca-steps { margin:15px 0; padding:0; list-style:none; }
+    #rca-demo .rca-step { position:relative; display:flex; gap:11px; min-height:61px; padding-bottom:14px; }
+    #rca-demo .rca-step:not(:last-child):before { content:""; position:absolute; left:12px; top:27px; bottom:0; width:1px; background:var(--rca-line); }
+    #rca-demo .rca-dot { display:flex; align-items:center; justify-content:center; border:1px solid var(--rca-line); border-radius:50%; flex:0 0 25px; height:25px; color:var(--rca-muted); background:var(--rca-panel); font-size:12px; }
+    #rca-demo .rca-step.done .rca-dot { background:var(--rca-teal); color:light-dark(#fff,#092c29); border-color:var(--rca-teal); }
+    #rca-demo .rca-step.active .rca-dot { color:var(--rca-teal); border:3px solid var(--rca-teal); outline:3px solid var(--rca-soft); font-size:0; }
+    #rca-demo .rca-step.active strong { color:var(--rca-teal); }
+    #rca-demo .rca-step strong { display:block; font-size:13px; font-weight:600; }
+    #rca-demo .rca-step small { display:block; color:var(--rca-muted); font-size:11px; margin-top:3px; }
+    #rca-demo .rca-question { background:var(--rca-soft); border-radius:6px; padding:10px; font-size:12px; }
+    #rca-demo .rca-question b { display:block; color:var(--rca-teal); margin-bottom:4px; font-weight:600; }
+    #rca-demo .rca-hypotheses { padding:16px; }
+    #rca-demo .rca-panelhead { justify-content:space-between; margin-bottom:5px; }
+    #rca-demo .rca-support-note { font-size:11px; color:var(--rca-muted); margin-bottom:13px; }
+    #rca-demo .rca-hyp-list { display:grid; gap:8px; }
+    #rca-demo .rca-hyp { display:grid; grid-template-columns:30px minmax(0,1fr) 62px; gap:9px; text-align:left; width:100%; padding:10px; background:var(--rca-panel); border:1px solid var(--rca-line); border-radius:7px; align-items:center; }
+    #rca-demo .rca-hyp.selected { border-color:var(--rca-series); box-shadow:inset 3px 0 var(--rca-series); }
+    #rca-demo .rca-hypid { color:var(--rca-series); font-weight:600; align-self:start; padding-top:2px; }
+    #rca-demo .rca-hypname { display:block; font-size:13px; font-weight:600; overflow-wrap:anywhere; }
+    #rca-demo .rca-hypreason { display:block; font-size:12px; color:var(--rca-muted); }
+    #rca-demo .rca-score { text-align:right; align-self:start; color:var(--rca-series); font-size:19px; font-weight:600; font-variant-numeric:tabular-nums; }
+    #rca-demo .rca-score small { display:block; font-size:11px; font-weight:400; color:var(--rca-muted); }
+    #rca-demo .rca-bar { display:block; height:5px; background:var(--rca-bg); border-radius:3px; margin-top:8px; }
+    #rca-demo .rca-bar span { display:block; height:100%; border-radius:3px; background:var(--rca-series); transition:width .35s ease; }
+    #rca-demo .rca-hypstate { font-size:11px; color:var(--rca-muted); margin-top:5px; display:block; }
+    #rca-demo .rca-update { display:flex; align-items:flex-start; gap:8px; padding:10px; margin:12px 0; background:var(--rca-soft); color:var(--rca-text); border-radius:6px; font-size:12px; }
+    #rca-demo .rca-update b { flex:0 0 auto; font-weight:600; color:var(--rca-teal); }
+    #rca-demo .rca-history-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+    #rca-demo .rca-history-head span { font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-chart { width:100%; display:block; }
+    #rca-demo .rca-chart text { fill:var(--rca-muted); font:11px "Segoe UI","Microsoft YaHei",sans-serif; }
+    #rca-demo .rca-chart .rca-chart-value { fill:var(--rca-text); font-size:12px; font-weight:600; }
+    #rca-demo .rca-legend { display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-swatch { display:inline-block; width:13px; height:3px; background:var(--rca-series); vertical-align:middle; margin-right:4px; }
+    #rca-demo .rca-evidence { margin:0 14px 14px; padding:16px; }
+    #rca-demo .rca-evidence-grid { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(220px,1fr); gap:18px; margin-top:12px; }
+    #rca-demo .rca-evidence-info { border-left:1px solid var(--rca-line); padding-left:17px; min-width:0; }
+    #rca-demo .rca-finding { font-size:12px; margin-bottom:12px; }
+    #rca-demo .rca-finding strong { display:block; color:var(--rca-teal); font-weight:600; margin-bottom:4px; }
+    #rca-demo .rca-finding.challenge strong { color:var(--rca-gold); }
+    #rca-demo details { margin-top:8px; font-size:11px; color:var(--rca-muted); }
+    #rca-demo summary { cursor:pointer; padding:5px 0; }
+    #rca-demo .rca-source { margin:5px 0; padding:8px; border-radius:5px; background:var(--rca-bg); overflow-wrap:anywhere; }
+    #rca-demo .rca-source div+div { margin-top:4px; }
+    #rca-demo .rca-history-steps { display:flex; gap:6px; margin:8px 0 0; flex-wrap:wrap; }
+    #rca-demo .rca-eventbtn { padding:4px 7px; border:1px solid var(--rca-line); border-radius:4px; font-size:11px; background:var(--rca-panel); }
+    #rca-demo .rca-eventbtn[aria-pressed="true"] { background:var(--rca-soft); border-color:var(--rca-teal); color:var(--rca-teal); }
+    #rca-demo .rca-footer { padding:11px 16px; background:var(--rca-panel); border-top:1px solid var(--rca-line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-final { display:none; background:var(--rca-soft); padding:10px 13px; margin:0 14px 14px; border-radius:7px; font-size:13px; }
+    #rca-demo .rca-final.visible { display:block; }
+    #rca-demo .rca-final strong { font-weight:600; color:var(--rca-teal); }
+    #rca-demo .rca-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+    @media(max-width:700px) { #rca-demo .rca-main { grid-template-columns:1fr; } #rca-demo .rca-steps { display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; margin-bottom:7px; } #rca-demo .rca-step { min-height:55px; } #rca-demo .rca-step:before { display:none; } #rca-demo .rca-evidence-grid { grid-template-columns:1fr; } #rca-demo .rca-evidence-info { border-left:0; padding-left:0; border-top:1px solid var(--rca-line); padding-top:12px; } }
+    @media(max-width:430px) { #rca-demo .rca-header { padding:15px; } #rca-demo h1 { font-size:19px; } #rca-demo .rca-actions { gap:5px; } #rca-demo .rca-action { padding:7px 8px; } #rca-demo .rca-main { padding:9px; gap:9px; } #rca-demo .rca-hypotheses,#rca-demo .rca-process { padding:12px; } #rca-demo .rca-evidence { margin:0 9px 9px; padding:12px; } #rca-demo .rca-hyp { gap:6px; grid-template-columns:23px minmax(0,1fr) 46px; padding:9px; } #rca-demo .rca-hypname { font-size:12px; } }
+    @media(pointer:coarse) { #rca-demo .rca-action,#rca-demo .rca-eventbtn,#rca-demo summary { min-height:44px; } }
+    @media(prefers-reduced-motion:reduce) { #rca-demo .rca-bar span { transition:none; } }
+  </style>
+  <header class="rca-header">
+    <div class="rca-headrow">
+      <div><div class="rca-titleline"><h1>Root Cause Investigation</h1><span class="rca-badge rca-illustrative">DEMO · 设计示意 · 非真实运行</span></div><div class="rca-sub">Case 0 · 事件窗口 09:00–09:30 UTC+8 · 1 个故障 · 定位组件与原因</div></div>
+      <div class="rca-actions"><button class="rca-action" id="rca-back" type="button" aria-label="上一个调查事件">← 上一步</button><button class="rca-action" id="rca-play" type="button">播放回放</button><button class="rca-action primary" id="rca-next" type="button">下一步 →</button></div>
+    </div>
+    <div class="rca-runtime"><span id="rca-clock"></span><span id="rca-llm"></span><span>演示费用 <strong>—</strong></span><span id="rca-topstatus"></span></div>
+  </header>
+  <div class="rca-main">
+    <aside class="rca-pane rca-process"><div class="rca-panelhead"><h2>调查进度</h2><span class="rca-badge" id="rca-progress"></span></div><ol class="rca-steps" id="rca-steps"></ol><div class="rca-question"><b>当前待回答的问题</b><span id="rca-question"></span></div></aside>
+    <section class="rca-pane rca-hypotheses" aria-label="候选假设与证据支持变化">
+      <div class="rca-panelhead"><h2>候选假设</h2><span class="rca-badge">H1–H3 固定身份</span></div>
+      <div class="rca-support-note">证据支持分 0–100 · 全部为示意分值 · 非正确率／概率</div>
+      <div class="rca-hyp-list" id="rca-hyp-list"></div>
+      <div class="rca-update" aria-live="polite"><b id="rca-update-id"></b><span id="rca-update-text"></span></div>
+      <div class="rca-history-head"><h3>证据到达时，判断如何变化</h3><span>无新判断 → 保持分值</span></div>
+      <div id="rca-history"></div><div class="rca-legend" id="rca-legend"></div>
+      <div class="rca-history-steps" id="rca-history-steps" aria-label="调查回放事件"></div>
+    </section>
+  </div>
+  <section class="rca-pane rca-evidence" aria-label="选中假设的证据详情">
+    <div class="rca-panelhead"><h2 id="rca-evidence-title"></h2><span class="rca-badge" id="rca-evidence-id"></span></div>
+    <div class="rca-evidence-grid">
+      <div><div class="rca-sub" id="rca-series-title"></div><div id="rca-series"></div><div class="rca-legend" id="rca-series-legend"></div></div>
+      <div class="rca-evidence-info"><div class="rca-finding"><strong id="rca-support-title"></strong><span id="rca-support"></span></div><div class="rca-finding challenge"><strong>仍未解释的部分</strong><span id="rca-challenge"></span></div><details id="rca-source-detail"><summary>查看证据来源与查询范围</summary><div class="rca-source" id="rca-source"></div></details></div>
+    </div>
+  </section>
+  <div class="rca-final" id="rca-final"><strong>最终选择：H1 · shippingservice-1 · read I/O load</strong><br>置信度：中（示意） · 结构校验通过 · CPU 与 I/O 的先后关系仍未解决</div>
+  <footer class="rca-footer"><span>调查回放 · 时间、曲线与支持分均为设计数据</span><span id="rca-footer-state">选择假设可联动查看证据</span></footer>
+  <span class="rca-sr" id="rca-announcement" aria-live="polite"></span>
+  <script>
+  (()=>{
+    const root=document.getElementById('rca-demo');
+    const $=id=>root.querySelector('#'+id);
+    const hypotheses=[
+      {id:'H1',name:'shippingservice-1',reason:'Container read I/O load',color:'var(--rca-teal)'},
+      {id:'H2',name:'shippingservice-1',reason:'Container CPU load',color:'var(--rca-blue)'},
+      {id:'H3',name:'node-6',reason:'Node disk read I/O',color:'var(--rca-gold)'}
+    ];
+    const phases=[['解析任务窗口','Task parser'],['准备遥测数据','Data processor'],['发现指标异常','Metrics tools'],['核对 Trace / Logs','Cross-modal tools'],['定向补查与比较','Controller → Tools'],['形成答案并校验','Controller + Verifier']];
+    const events=[
+      {id:'准备',label:'数据就绪',done:2,elapsed:'2.1',calls:0,scores:[null,null,null],question:'哪些组件在目标窗口出现异常？',update:'窗口与实体已识别；候选尚未生成。'},
+      {id:'E01',label:'指标',done:3,elapsed:'4.8',calls:0,scores:[62,55,52],question:'局部 Pod 故障，还是整台节点异常？',update:'读 I/O 与 CPU 同时上升，生成 3 个候选假设。'},
+      {id:'E02',label:'交叉核对',done:4,elapsed:'10.6',calls:1,scores:[62,55,52],question:'比较同节点其他 Pod，能否区分影响范围？',update:'Trace 延迟缺少机制区分力；三项支持分保持不变。'},
+      {id:'E03',label:'定向补查',done:5,elapsed:'18.2',calls:1,scores:[78,51,34],question:'H1 最受支持，但 CPU 是原因还是伴随现象？',update:'其他同节点 Pod 较稳定：H1 +16；节点级 H3 −18。'},
+      {id:'E04',label:'答案校验',done:6,elapsed:'26.4',calls:2,scores:[78,51,34],question:'已选择 H1；保留 CPU / I/O 因果顺序的不确定性。',update:'答案格式与证据引用通过校验；校验本身不增加支持分。'}
+    ];
+    const saved=window.openai?.widgetState;
+    const state={event:3,hypothesis:0,playing:false};
+    const design={history:true,processWidth:28};
+    let timer=null;
+    function applySaved(snapshot){const s=snapshot?.modelContent;if(s?.view==='rca-demo'){if(Number.isInteger(s.event)&&s.event>=0&&s.event<events.length)state.event=s.event;const idx=hypotheses.findIndex(h=>h.id===s.hypothesis);if(idx>=0)state.hypothesis=idx;}}
+    applySaved(saved);
+    function persist(){window.openai?.setWidgetState?.({modelContent:{view:'rca-demo',event:state.event,hypothesis:hypotheses[state.hypothesis].id,data:'illustrative'},privateContent:null})?.catch(()=>{});}
+    function stop(){state.playing=false;if(timer)clearTimeout(timer);timer=null;}
+    function advance(){if(state.event>=events.length-1){stop();render();return;}state.event++;render();persist();if(state.event>=events.length-1){stop();render();}else if(state.playing)timer=setTimeout(advance,2100);}
+    const svg=(w,h,body,title)=>`<svg class="rca-chart" viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="${title}"><title>${title}</title>${body}</svg>`;
+    function drawHistory(){
+      const host=$('rca-history');host.hidden=!design.history;
+      if(!design.history)return;
+      const w=Math.max(240,host.clientWidth),h=132,left=28,right=42,top=13,bottom=29;
+      const x=i=>left+(w-left-right)*i/3,y=v=>top+(h-top-bottom)*(100-v)/100;
+      let body=[0,50,100].map(v=>`<line x1="${left}" x2="${w-right}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rca-line)"/><text x="${left-7}" y="${y(v)+4}" text-anchor="end">${v}</text>`).join('');
+      events.slice(1).forEach((e,i)=>{body+=`<text x="${x(i)}" y="${h-8}" text-anchor="${i===0?'start':i===3?'end':'middle'}">${e.id}</text>`;});
+      hypotheses.forEach((hyp,index)=>{
+        const values=events.slice(1,state.event+1).map(e=>e.scores[index]);
+        if(!values.length)return;
+        let path=`M${x(0)},${y(values[0])}`;values.slice(1).forEach((v,i)=>path+=` H${x(i+1)} V${y(v)}`);
+        body+=`<path d="${path}" fill="none" stroke="${hyp.color}" stroke-width="${state.hypothesis===index?2.6:1.6}" stroke-dasharray="${index===2?'4 3':'none'}"/>`;
+        values.forEach((v,i)=>body+=`<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="var(--rca-panel)" stroke="${hyp.color}" stroke-width="1.8"><title>${hyp.id} / ${events[i+1].id}: ${v} 示意支持分</title></circle>`);
+      });
+      host.innerHTML=svg(w,h,body,'示意证据支持分随事件变化；只显示当前回放位置之前的判断');
+    }
+    function drawEvidence(){
+      const host=$('rca-series'),w=Math.max(235,host.clientWidth),h=157,l=35,r=12,t=14,b=33;
+      const x=i=>l+(w-l-r)*i/30,y=v=>t+(h-t-b)*(100-v)/100;
+      const pod=[12,11,13,12,14,11,14,13,15,13,16,17,24,30,43,55,50,65,60,72,67,70,65,68,54,52,36,22,17,15,13];
+      const cpu=pod.map((v,i)=>Math.max(9,v*.83+(i%3)*3));
+      const control=pod.map((v,i)=>12+(i%4)*1.3+(i>12&&i<27?3:0));
+      const node=pod.map((v,i)=>15+(i%3)*2+(i>11&&i<25?13:0));
+      const primary=state.hypothesis===0?pod:state.hypothesis===1?cpu:node;
+      const color=hypotheses[state.hypothesis].color;
+      const visible=state.event>=1;
+      let body=`<rect x="${x(12)}" y="${t}" width="${x(27)-x(12)}" height="${h-t-b}" fill="var(--rca-soft)"/>`;
+      [0,50,100].forEach(v=>body+=`<line x1="${l}" x2="${w-r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rca-line)"/><text x="${l-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`);
+      [0,15,30].forEach(i=>body+=`<text x="${x(i)}" y="${h-14}" text-anchor="${i===0?'start':i===30?'end':'middle'}">09:${String(i).padStart(2,'0')}</text>`);
+      if(visible){
+        const path=vals=>vals.map((v,i)=>`${i?'L':'M'}${x(i)},${y(v)}`).join(' ');
+        body+=`<path d="${path(primary)}" fill="none" stroke="${color}" stroke-width="2.2"/>`;
+        if(state.event>=3)body+=`<path d="${path(control)}" fill="none" stroke="var(--rca-muted)" stroke-width="1.7" stroke-dasharray="4 3"/>`;
+      }else body+=`<text x="${w/2}" y="${h/2}" text-anchor="middle">等待指标证据</text>`;
+      host.innerHTML=svg(w,h,body,'示意遥测趋势；横轴为事件时间 UTC+8，纵轴为示意相对值，非实际测量');
+      $('rca-series-legend').innerHTML=`<span style="--rca-series:${color}"><i class="rca-swatch"></i>${state.hypothesis===2?'node-6':'选中 Pod'}</span>${state.event>=3?'<span>┄ 同节点其他 Pod（示意参考）</span>':''}`;
+    }
+    function render(){
+      const ev=events[state.event],prev=events[Math.max(0,state.event-1)],hyp=hypotheses[state.hypothesis];
+      root.querySelector('.rca-main').style.gridTemplateColumns=root.clientWidth>700?`minmax(210px,${design.processWidth}%) minmax(0,1fr)`:'1fr';
+      $('rca-clock').innerHTML=`${state.playing?'▶ 回放中':'回放已暂停'} · 调查耗时 <strong>+${ev.elapsed} s</strong>`;
+      $('rca-llm').innerHTML=`模型轮次 <strong>${ev.calls} / 2</strong>`;
+      $('rca-topstatus').innerHTML=`状态 <strong>${state.event===4?'完成 · 尚未评分':'调查中'}</strong>`;
+      $('rca-progress').textContent=`${ev.done} / 6`;
+      $('rca-steps').innerHTML=phases.map((p,i)=>`<li class="rca-step ${i<ev.done?'done':i===ev.done?'active':''}"><span class="rca-dot" aria-hidden="true">${i<ev.done?'✓':i+1}</span><div><strong>${p[0]}</strong><small>${p[1]} · ${i<ev.done?'已完成':i===ev.done?'进行中':'待开始'}</small></div></li>`).join('');
+      $('rca-question').textContent=ev.question;
+      $('rca-hyp-list').innerHTML=hypotheses.map((item,i)=>{
+        const score=ev.scores[i],last=prev.scores[i],delta=score===null||last===null?'—':score-last===0?'未改变':`${score-last>0?'+':''}${score-last}`;
+        const label=score===null?'尚未生成':state.event>=3?['领先 · 仍有不确定性','仍可解释部分现象','支持减弱 · 未排除'][i]:'待区分';
+        return `<button type="button" class="rca-hyp ${state.hypothesis===i?'selected':''}" style="--rca-series:${item.color}" data-hyp="${i}" aria-pressed="${state.hypothesis===i}" aria-label="查看 ${item.id} ${item.name} ${item.reason} 的证据"><span class="rca-hypid">${item.id}</span><span><span class="rca-hypname">${score===null?'候选待发现':item.name}</span><span class="rca-hypreason">${score===null?'等待指标检测':item.reason}</span><span class="rca-bar"><span style="width:${score??0}%"></span></span><span class="rca-hypstate">${label}</span></span><span class="rca-score">${score??'—'}<small>${delta}</small></span></button>`;
+      }).join('');
+      $('rca-update-id').textContent=ev.id;
+      $('rca-update-text').textContent=ev.update;
+      $('rca-legend').innerHTML=hypotheses.map(h=>`<span style="--rca-series:${h.color}"><i class="rca-swatch"></i>${h.id}</span>`).join('');
+      root.querySelector('.rca-history-head').style.display=design.history?'flex':'none';
+      $('rca-legend').style.display=design.history?'flex':'none';
+      $('rca-history-steps').innerHTML=events.map((e,i)=>`<button type="button" class="rca-eventbtn" data-event="${i}" aria-pressed="${state.event===i}">${e.label}</button>`).join('');
+      $('rca-evidence-title').textContent=`${hyp.id} · ${state.event===0?'等待证据':'证据检查'}`;
+      $('rca-evidence-id').textContent=state.event>=3?'E01 + E03 · Metrics':state.event>=1?'E01 · Metrics':'暂无证据';
+      $('rca-series-title').textContent=`${state.event===0?'待查询':hyp.name} · 示意相对值（0–100） · 事件时间 UTC+8`;
+      const supports=[
+        state.event>=3?'读活动异常集中在选中 Pod；同节点其他 Pod 较稳定。':'读活动在目标窗口上升，与 I/O 假设相容。',
+        '同一 Pod 的 CPU 也出现上升，CPU 假设仍有证据支持。',
+        state.event>=3?'同节点其他 Pod 较稳定，削弱“节点普遍受影响”的解释。':'节点级读活动也有波动，需要检查受影响范围。'
+      ];
+      const challenges=['CPU 与 I/O 在同一采样区间上升，尚不能确定谁先发生。','CPU 可能是 I/O 压力的伴随现象；相关性不能确定因果。','不同工作负载敏感度不同；其他 Pod 稳定不足以完全排除节点问题。'];
+      $('rca-support-title').textContent=state.hypothesis===2&&state.event>=3?'削弱该假设的观察':'支持该假设的观察';
+      $('rca-support').textContent=state.event===0?'尚未检索。':supports[state.hypothesis];
+      $('rca-challenge').textContent=state.event===0?'等待证据后生成假设。':challenges[state.hypothesis];
+      $('rca-source').innerHTML=`<div>来源：设计示意；未加载实际遥测</div><div>拟对应工具：metric_series / metric_anomalies</div><div>范围：09:00–09:30 UTC+8 · ${state.event===0?'尚未选择组件':hyp.name}</div><div>实际接入需保留：证据 ID、原 CMDB ID、KPI、单位、来源文件及查询参数。</div>`;
+      $('rca-final').classList.toggle('visible',state.event===4);
+      $('rca-footer-state').textContent=state.event===4?'完成 ≠ 正确 · 结构校验 ≠ 因果验证':'选择假设可联动查看证据';
+      $('rca-back').disabled=state.event===0;$('rca-next').disabled=state.event===events.length-1;
+      $('rca-play').textContent=state.playing?'暂停回放':state.event===events.length-1?'重新回放':'播放回放';
+      $('rca-announcement').textContent=`${ev.label}。${ev.update} 当前选中 ${hyp.id}。`;
+      drawHistory();drawEvidence();
+    }
+    $('rca-back').addEventListener('click',()=>{stop();state.event=Math.max(0,state.event-1);render();persist();});
+    $('rca-next').addEventListener('click',()=>{stop();advance();});
+    $('rca-play').addEventListener('click',()=>{if(state.playing)stop();else{if(state.event===events.length-1)state.event=0;state.playing=true;timer=setTimeout(advance,2100);}render();persist();});
+    $('rca-hyp-list').addEventListener('click',e=>{const button=e.target.closest('[data-hyp]');if(button){state.hypothesis=Number(button.dataset.hyp);render();persist();}});
+    $('rca-history-steps').addEventListener('click',e=>{const button=e.target.closest('[data-event]');if(button){stop();state.event=Number(button.dataset.event);render();persist();}});
+    window.addEventListener('openai:set_globals',e=>{const next=e.detail?.globals?.widgetState;if(next){const previous=[state.event,state.hypothesis];applySaved(next);if(previous[0]!==state.event||previous[1]!==state.hypothesis){stop();render();}}});
+    const observer=new ResizeObserver(()=>{root.querySelector('.rca-main').style.gridTemplateColumns=root.clientWidth>700?`minmax(210px,${design.processWidth}%) minmax(0,1fr)`:'1fr';drawHistory();drawEvidence();});observer.observe(root);
+    render();
+    if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addToggle(design,'history',{label:'显示支持分历史'});tweak.addSlider(design,'processWidth',{label:'流程区宽度',min:24,max:34,step:1,unit:'%'});}
+  })();
+  </script>
+</div>

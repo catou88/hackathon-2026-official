@@ -1,0 +1,2103 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>DEMO | Root Cause Investigation</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe id="codex-visualization" sandbox="allow-scripts" referrerpolicy="no-referrer" title="DEMO | Root Cause Investigation" data-srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; data-visualize-standalone&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;DEMO | Root Cause Investigation&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled=&quot;true&quot;]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled=&quot;true&quot;] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;script type=&quot;application/json&quot; id=&quot;codex-visualization-widget-state&quot;&gt;__CODEX_VISUALIZATION_WIDGET_STATE__&lt;/script&gt;
+&lt;script&gt;(() =&gt; {
+  const root = document.documentElement;
+  const mediaQuery = globalThis.matchMedia(&quot;(prefers-color-scheme: dark)&quot;);
+  const apply = Reflect.apply;
+  const isArray = Array.isArray;
+  const hasOwn = Object.hasOwn;
+  const parentWindow = globalThis.parent;
+  const stringify = JSON.stringify;
+  const parse = JSON.parse;
+  const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
+  const initialStateElement = document.getElementById(
+    &quot;codex-visualization-widget-state&quot;,
+  );
+  const initialGlobals = parse(initialStateElement?.textContent ?? &quot;{}&quot;);
+  initialStateElement?.remove();
+  /** @type {Record&lt;string, unknown&gt; | null} */
+  let state = initialGlobals.widgetState ?? null;
+  const statePersistence = initialGlobals.statePersistence ?? &quot;none&quot;;
+  let nextStateRequestId = 0;
+  /** @type {Map&lt;number, { resolve: () =&gt; void; reject: (error: Error) =&gt; void; timeout: ReturnType&lt;typeof globalThis.setTimeout&gt;; serializedState: string }&gt;} */
+  const pendingStateWrites = new Map();
+  const persistenceError = () =&gt;
+    Object.assign(
+      new Error(&quot;The host could not persist the widget state update&quot;),
+      {
+        code: -32000,
+        data: { code: &quot;widget_state_persistence_failed&quot;, retryable: false },
+      },
+    );
+  /**
+   * @param {object} prototype
+   * @param {string} property
+   */
+  const getPrototypeGetter = (prototype, property) =&gt; {
+    // oxlint-disable-next-line typescript/unbound-method -- invoked through captured Reflect.apply
+    const getter = Object.getOwnPropertyDescriptor(prototype, property)?.get;
+    if (getter == null) {
+      throw new Error(`Missing ${property} getter`);
+    }
+    return getter;
+  };
+  const getMessageData = getPrototypeGetter(MessageEvent.prototype, &quot;data&quot;);
+  const getMessagePorts = getPrototypeGetter(MessageEvent.prototype, &quot;ports&quot;);
+  const getMessageSource = getPrototypeGetter(MessageEvent.prototype, &quot;source&quot;);
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const addHostMessageListener = MessagePort.prototype.addEventListener;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const postHostMessage = MessagePort.prototype.postMessage;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const startHostPort = MessagePort.prototype.start;
+  // oxlint-disable-next-line typescript/unbound-method -- captured before the untrusted fragment runs
+  const stopMessagePropagation = Event.prototype.stopImmediatePropagation;
+  /** @type {MessagePort | null} */
+  let hostPort = null;
+  const postToHost = (type, payload) =&gt; {
+    if (hostPort != null) {
+      apply(postHostMessage, hostPort, [{ type, ...payload }]);
+    }
+  };
+  const openExternal = ({ href }) =&gt; {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost(&quot;open-external&quot;, { href });
+    }
+  };
+  const sendFollowUpMessage = ({ context, prompt, title }) =&gt; {
+    if (globalThis.navigator.userActivation?.isActive === true) {
+      postToHost(&quot;follow-up&quot;, { context, prompt, title });
+    }
+    return Promise.resolve();
+  };
+  /**
+   * @param {Record&lt;string, unknown&gt; | ((previous: Record&lt;string, unknown&gt; | null) =&gt; Record&lt;string, unknown&gt;)} next
+   * @returns {Promise&lt;void&gt;}
+   */
+  const setWidgetState = async (next) =&gt; {
+    const nextState = typeof next === &quot;function&quot; ? next(state) : next;
+    if (
+      nextState == null ||
+      typeof nextState !== &quot;object&quot; ||
+      isArray(nextState)
+    ) {
+      throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+    }
+    const inputState = stringify(
+      nextState,
+      (_key, /** @type {unknown} */ value) =&gt; {
+        if (
+          typeof value === &quot;undefined&quot; ||
+          typeof value === &quot;function&quot; ||
+          typeof value === &quot;symbol&quot; ||
+          (typeof value === &quot;number&quot; &amp;&amp; !Number.isFinite(value))
+        ) {
+          throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+        }
+        return value;
+      },
+    );
+    const parsedState = parse(inputState);
+    if (
+      parsedState == null ||
+      typeof parsedState !== &quot;object&quot; ||
+      isArray(parsedState)
+    ) {
+      throw new TypeError(&quot;Widget state must be a JSON object&quot;);
+    }
+    const storedState = {
+      modelContent: null,
+      privateContent: null,
+      ...parsedState,
+    };
+    const serializedState = stringify(storedState);
+    if (encode(serializedState).length &gt; 16 * 1024) {
+      throw new TypeError(
+        &quot;Widget state must be a JSON object of at most 16 KiB&quot;,
+      );
+    }
+    if (
+      hasOwn(storedState, &quot;imageIds&quot;) &amp;&amp;
+      (!isArray(storedState.imageIds) ||
+        storedState.imageIds.some(
+          (/** @type {unknown} */ id) =&gt; typeof id !== &quot;string&quot;,
+        ))
+    ) {
+      throw new TypeError(&quot;Widget state imageIds must be an array of strings&quot;);
+    }
+    if (storedState.imageIds?.length &gt; 0) {
+      throw Object.assign(
+        new TypeError(&quot;Visualization state does not support image attachments&quot;),
+        { code: -32602, data: { code: &quot;images_unsupported&quot; } },
+      );
+    }
+    state = storedState;
+    globalThis.openai.widgetState = state;
+    globalThis.dispatchEvent(
+      new CustomEvent(&quot;openai:set_globals&quot;, {
+        detail: { globals: { widgetState: state } },
+      }),
+    );
+    if (statePersistence === &quot;none&quot;) {
+      throw persistenceError();
+    }
+    const id = ++nextStateRequestId;
+    return new Promise((resolve, reject) =&gt; {
+      const timeout = globalThis.setTimeout(() =&gt; {
+        pendingStateWrites.delete(id);
+        reject(persistenceError());
+      }, 30_000);
+      pendingStateWrites.set(id, { resolve, reject, timeout, serializedState });
+      postToHost(&quot;widget-state-write&quot;, { id, state: serializedState });
+    });
+  };
+  const syncTheme = () =&gt; {
+    const theme = mediaQuery.matches ? &quot;dark&quot; : &quot;light&quot;;
+    root.dataset.theme = theme;
+    globalThis.openai = {
+      ...globalThis.openai,
+      openExternal,
+      sendFollowUpMessage,
+      setWidgetState,
+      theme,
+      visualizationStyleVariables: {},
+      visualizationTheme: theme,
+      widgetState: state,
+      statePersistence,
+      stateModelContext: &quot;none&quot;,
+    };
+    globalThis.dispatchEvent(
+      new CustomEvent(&quot;openai:set_globals&quot;, {
+        detail: { globals: globalThis.openai },
+      }),
+    );
+  };
+  const sendHeight = () =&gt; {
+    postToHost(&quot;height&quot;, {
+      height: Math.ceil(
+        Math.max(
+          document.body.scrollHeight,
+          document.body.getBoundingClientRect().height,
+        ),
+      ),
+    });
+  };
+
+  globalThis.addEventListener(
+    &quot;message&quot;,
+    (event) =&gt; {
+      const data = apply(getMessageData, event, []);
+      const ports = apply(getMessagePorts, event, []);
+      const source = apply(getMessageSource, event, []);
+      if (
+        hostPort != null ||
+        source !== parentWindow ||
+        typeof data !== &quot;object&quot; ||
+        data?.type !== &quot;codex-visualization-initialize&quot; ||
+        !isArray(ports) ||
+        ports.length !== 1
+      ) {
+        return;
+      }
+      apply(stopMessagePropagation, event, []);
+      const nextHostPort = ports[0];
+      try {
+        apply(addHostMessageListener, nextHostPort, [
+          &quot;message&quot;,
+          (event) =&gt; {
+            const data = apply(getMessageData, event, []);
+            if (typeof data === &quot;object&quot; &amp;&amp; data?.type === &quot;measure&quot;) {
+              sendHeight();
+            } else if (
+              typeof data === &quot;object&quot; &amp;&amp;
+              data?.type === &quot;widget-state-result&quot;
+            ) {
+              /** @type {unknown} */
+              const id = data.id;
+              if (typeof id !== &quot;number&quot;) {
+                return;
+              }
+              const pending = pendingStateWrites.get(id);
+              if (pending != null) {
+                pendingStateWrites.delete(id);
+                globalThis.clearTimeout(pending.timeout);
+                if (data.ok === true) {
+                  pending.resolve();
+                } else {
+                  pending.reject(persistenceError());
+                }
+              }
+            }
+          },
+        ]);
+        apply(startHostPort, nextHostPort, []);
+      } catch {
+        return;
+      }
+      hostPort = nextHostPort;
+      for (const [id, { serializedState }] of pendingStateWrites) {
+        postToHost(&quot;widget-state-write&quot;, { id, state: serializedState });
+      }
+      sendHeight();
+    },
+    { capture: true },
+  );
+  document.currentScript?.remove();
+  mediaQuery.addEventListener(&quot;change&quot;, syncTheme);
+  globalThis.addEventListener(&quot;click&quot;, (event) =&gt; {
+    if (event.defaultPrevented) {
+      return;
+    }
+    let element = null;
+    if (event.target instanceof globalThis.Element) {
+      element = event.target;
+    } else if (event.target instanceof globalThis.Node) {
+      element = event.target.parentElement;
+    }
+    const link = element?.closest(&quot;a[href]&quot;);
+    const href = link?.getAttribute(&quot;href&quot;);
+    if (href == null) {
+      return;
+    }
+    if (href.startsWith(&quot;#&quot;)) {
+      let id;
+      try {
+        id = decodeURIComponent(href.slice(1));
+      } catch {
+        return;
+      }
+      const target = id.length === 0 ? root : document.getElementById(id);
+      if (
+        target == null ||
+        globalThis.navigator.userActivation?.isActive !== true
+      ) {
+        return;
+      }
+      event.preventDefault();
+      postToHost(&quot;scroll-to&quot;, {
+        top: target.getBoundingClientRect().top + globalThis.scrollY,
+      });
+      return;
+    }
+    event.preventDefault();
+    openExternal({ href });
+  });
+  new ResizeObserver(sendHeight).observe(document.body);
+  syncTheme();
+})();
+&lt;/script&gt;
+&lt;div id=&quot;rca-demo&quot; aria-label=&quot;Root cause investigation dashboard design&quot;&gt;
+  &lt;style&gt;
+    #rca-demo { color-scheme:light dark; --rca-bg:light-dark(#f3f6f9,#111c25); --rca-panel:light-dark(#ffffff,#192733); --rca-text:light-dark(#172735,#edf4f8); --rca-muted:light-dark(#526575,#a9bdcb); --rca-line:light-dark(#dbe4eb,#354856); --rca-teal:light-dark(#008b83,#52cfc3); --rca-blue:light-dark(#3b78ce,#79acfa); --rca-gold:light-dark(#a56b06,#e5b75c); --rca-soft:light-dark(#e6f6f3,#173c3b); --rca-warn:light-dark(#fff5df,#3a3021); font:14px/1.45 &quot;Segoe UI&quot;,&quot;Microsoft YaHei&quot;,sans-serif; color:var(--rca-text); background:var(--rca-bg); border:1px solid var(--rca-line); border-radius:14px; overflow:hidden; width:100%; box-sizing:border-box; }
+    #rca-demo * { box-sizing:border-box; }
+    #rca-demo button { font:inherit; color:inherit; cursor:pointer; }
+    #rca-demo button:disabled { opacity:.45; cursor:default; }
+    #rca-demo .rca-header { padding:20px 22px 16px; background:var(--rca-panel); border-bottom:1px solid var(--rca-line); }
+    #rca-demo .rca-headrow, #rca-demo .rca-titleline, #rca-demo .rca-actions, #rca-demo .rca-panelhead, #rca-demo .rca-keyline { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    #rca-demo .rca-headrow { justify-content:space-between; }
+    #rca-demo h1 { font-size:22px; font-weight:600; letter-spacing:-.5px; line-height:1.3; margin:0; }
+    #rca-demo h2 { font-size:16px; font-weight:600; margin:0; }
+    #rca-demo h3 { font-size:13px; font-weight:600; margin:0 0 6px; }
+    #rca-demo .rca-sub { color:var(--rca-muted); font-size:12px; margin-top:7px; }
+    #rca-demo .rca-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border:1px solid var(--rca-line); border-radius:5px; color:var(--rca-muted); font-size:11px; }
+    #rca-demo .rca-illustrative { background:var(--rca-warn); color:var(--rca-gold); border-color:transparent; }
+    #rca-demo .rca-action { border:1px solid var(--rca-line); border-radius:7px; padding:7px 11px; background:var(--rca-panel); min-height:36px; }
+    #rca-demo .rca-action.primary { background:var(--rca-teal); color:light-dark(#fff,#072a28); border-color:transparent; }
+    #rca-demo .rca-runtime { display:flex; flex-wrap:wrap; gap:9px 20px; align-items:center; padding-top:13px; margin-top:13px; border-top:1px solid var(--rca-line); color:var(--rca-muted); font-size:12px; }
+    #rca-demo .rca-runtime strong { color:var(--rca-text); font-weight:600; font-variant-numeric:tabular-nums; }
+    #rca-demo .rca-main { display:grid; grid-template-columns:minmax(210px,28%) minmax(0,1fr); gap:13px; padding:14px; }
+    #rca-demo .rca-pane { border:1px solid var(--rca-line); background:var(--rca-panel); border-radius:9px; min-width:0; }
+    #rca-demo .rca-process { padding:16px; }
+    #rca-demo .rca-steps { margin:15px 0; padding:0; list-style:none; }
+    #rca-demo .rca-step { position:relative; display:flex; gap:11px; min-height:61px; padding-bottom:14px; }
+    #rca-demo .rca-step:not(:last-child):before { content:&quot;&quot;; position:absolute; left:12px; top:27px; bottom:0; width:1px; background:var(--rca-line); }
+    #rca-demo .rca-dot { display:flex; align-items:center; justify-content:center; border:1px solid var(--rca-line); border-radius:50%; flex:0 0 25px; height:25px; color:var(--rca-muted); background:var(--rca-panel); font-size:12px; }
+    #rca-demo .rca-step.done .rca-dot { background:var(--rca-teal); color:light-dark(#fff,#092c29); border-color:var(--rca-teal); }
+    #rca-demo .rca-step.active .rca-dot { color:var(--rca-teal); border:3px solid var(--rca-teal); outline:3px solid var(--rca-soft); font-size:0; }
+    #rca-demo .rca-step.active strong { color:var(--rca-teal); }
+    #rca-demo .rca-step strong { display:block; font-size:13px; font-weight:600; }
+    #rca-demo .rca-step small { display:block; color:var(--rca-muted); font-size:11px; margin-top:3px; }
+    #rca-demo .rca-question { background:var(--rca-soft); border-radius:6px; padding:10px; font-size:12px; }
+    #rca-demo .rca-question b { display:block; color:var(--rca-teal); margin-bottom:4px; font-weight:600; }
+    #rca-demo .rca-hypotheses { padding:16px; }
+    #rca-demo .rca-panelhead { justify-content:space-between; margin-bottom:5px; }
+    #rca-demo .rca-support-note { font-size:11px; color:var(--rca-muted); margin-bottom:13px; }
+    #rca-demo .rca-hyp-list { display:grid; gap:8px; }
+    #rca-demo .rca-hyp { display:grid; grid-template-columns:30px minmax(0,1fr) 62px; gap:9px; text-align:left; width:100%; padding:10px; background:var(--rca-panel); border:1px solid var(--rca-line); border-radius:7px; align-items:center; }
+    #rca-demo .rca-hyp.selected { border-color:var(--rca-series); box-shadow:inset 3px 0 var(--rca-series); }
+    #rca-demo .rca-hypid { color:var(--rca-series); font-weight:600; align-self:start; padding-top:2px; }
+    #rca-demo .rca-hypname { display:block; font-size:13px; font-weight:600; overflow-wrap:anywhere; }
+    #rca-demo .rca-hypreason { display:block; font-size:12px; color:var(--rca-muted); }
+    #rca-demo .rca-score { text-align:right; align-self:start; color:var(--rca-series); font-size:19px; font-weight:600; font-variant-numeric:tabular-nums; }
+    #rca-demo .rca-score small { display:block; font-size:11px; font-weight:400; color:var(--rca-muted); }
+    #rca-demo .rca-bar { display:block; height:5px; background:var(--rca-bg); border-radius:3px; margin-top:8px; }
+    #rca-demo .rca-bar span { display:block; height:100%; border-radius:3px; background:var(--rca-series); transition:width .35s ease; }
+    #rca-demo .rca-hypstate { font-size:11px; color:var(--rca-muted); margin-top:5px; display:block; }
+    #rca-demo .rca-update { display:flex; align-items:flex-start; gap:8px; padding:10px; margin:12px 0; background:var(--rca-soft); color:var(--rca-text); border-radius:6px; font-size:12px; }
+    #rca-demo .rca-update b { flex:0 0 auto; font-weight:600; color:var(--rca-teal); }
+    #rca-demo .rca-history-head { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+    #rca-demo .rca-history-head span { font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-chart { width:100%; display:block; }
+    #rca-demo .rca-chart text { fill:var(--rca-muted); font:11px &quot;Segoe UI&quot;,&quot;Microsoft YaHei&quot;,sans-serif; }
+    #rca-demo .rca-chart .rca-chart-value { fill:var(--rca-text); font-size:12px; font-weight:600; }
+    #rca-demo .rca-legend { display:flex; gap:14px; flex-wrap:wrap; font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-swatch { display:inline-block; width:13px; height:3px; background:var(--rca-series); vertical-align:middle; margin-right:4px; }
+    #rca-demo .rca-evidence { margin:0 14px 14px; padding:16px; }
+    #rca-demo .rca-evidence-grid { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(220px,1fr); gap:18px; margin-top:12px; }
+    #rca-demo .rca-evidence-info { border-left:1px solid var(--rca-line); padding-left:17px; min-width:0; }
+    #rca-demo .rca-finding { font-size:12px; margin-bottom:12px; }
+    #rca-demo .rca-finding strong { display:block; color:var(--rca-teal); font-weight:600; margin-bottom:4px; }
+    #rca-demo .rca-finding.challenge strong { color:var(--rca-gold); }
+    #rca-demo details { margin-top:8px; font-size:11px; color:var(--rca-muted); }
+    #rca-demo summary { cursor:pointer; padding:5px 0; }
+    #rca-demo .rca-source { margin:5px 0; padding:8px; border-radius:5px; background:var(--rca-bg); overflow-wrap:anywhere; }
+    #rca-demo .rca-source div+div { margin-top:4px; }
+    #rca-demo .rca-history-steps { display:flex; gap:6px; margin:8px 0 0; flex-wrap:wrap; }
+    #rca-demo .rca-eventbtn { padding:4px 7px; border:1px solid var(--rca-line); border-radius:4px; font-size:11px; background:var(--rca-panel); }
+    #rca-demo .rca-eventbtn[aria-pressed=&quot;true&quot;] { background:var(--rca-soft); border-color:var(--rca-teal); color:var(--rca-teal); }
+    #rca-demo .rca-footer { padding:11px 16px; background:var(--rca-panel); border-top:1px solid var(--rca-line); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:11px; color:var(--rca-muted); }
+    #rca-demo .rca-final { display:none; background:var(--rca-soft); padding:10px 13px; margin:0 14px 14px; border-radius:7px; font-size:13px; }
+    #rca-demo .rca-final.visible { display:block; }
+    #rca-demo .rca-final strong { font-weight:600; color:var(--rca-teal); }
+    #rca-demo .rca-sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+    @media(max-width:700px) { #rca-demo .rca-main { grid-template-columns:1fr; } #rca-demo .rca-steps { display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; margin-bottom:7px; } #rca-demo .rca-step { min-height:55px; } #rca-demo .rca-step:before { display:none; } #rca-demo .rca-evidence-grid { grid-template-columns:1fr; } #rca-demo .rca-evidence-info { border-left:0; padding-left:0; border-top:1px solid var(--rca-line); padding-top:12px; } }
+    @media(max-width:430px) { #rca-demo .rca-header { padding:15px; } #rca-demo h1 { font-size:19px; } #rca-demo .rca-actions { gap:5px; } #rca-demo .rca-action { padding:7px 8px; } #rca-demo .rca-main { padding:9px; gap:9px; } #rca-demo .rca-hypotheses,#rca-demo .rca-process { padding:12px; } #rca-demo .rca-evidence { margin:0 9px 9px; padding:12px; } #rca-demo .rca-hyp { gap:6px; grid-template-columns:23px minmax(0,1fr) 46px; padding:9px; } #rca-demo .rca-hypname { font-size:12px; } }
+    @media(pointer:coarse) { #rca-demo .rca-action,#rca-demo .rca-eventbtn,#rca-demo summary { min-height:44px; } }
+    @media(prefers-reduced-motion:reduce) { #rca-demo .rca-bar span { transition:none; } }
+  &lt;/style&gt;
+  &lt;header class=&quot;rca-header&quot;&gt;
+    &lt;div class=&quot;rca-headrow&quot;&gt;
+      &lt;div&gt;&lt;div class=&quot;rca-titleline&quot;&gt;&lt;h1&gt;Root Cause Investigation&lt;/h1&gt;&lt;span class=&quot;rca-badge rca-illustrative&quot;&gt;DEMO · 设计示意 · 非真实运行&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;rca-sub&quot;&gt;Case 0 · 事件窗口 09:00–09:30 UTC+8 · 1 个故障 · 定位组件与原因&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-actions&quot;&gt;&lt;button class=&quot;rca-action&quot; id=&quot;rca-back&quot; type=&quot;button&quot; aria-label=&quot;上一个调查事件&quot;&gt;← 上一步&lt;/button&gt;&lt;button class=&quot;rca-action&quot; id=&quot;rca-play&quot; type=&quot;button&quot;&gt;播放回放&lt;/button&gt;&lt;button class=&quot;rca-action primary&quot; id=&quot;rca-next&quot; type=&quot;button&quot;&gt;下一步 →&lt;/button&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;rca-runtime&quot;&gt;&lt;span id=&quot;rca-clock&quot;&gt;&lt;/span&gt;&lt;span id=&quot;rca-llm&quot;&gt;&lt;/span&gt;&lt;span&gt;演示费用 &lt;strong&gt;—&lt;/strong&gt;&lt;/span&gt;&lt;span id=&quot;rca-topstatus&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;/header&gt;
+  &lt;div class=&quot;rca-main&quot;&gt;
+    &lt;aside class=&quot;rca-pane rca-process&quot;&gt;&lt;div class=&quot;rca-panelhead&quot;&gt;&lt;h2&gt;调查进度&lt;/h2&gt;&lt;span class=&quot;rca-badge&quot; id=&quot;rca-progress&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;ol class=&quot;rca-steps&quot; id=&quot;rca-steps&quot;&gt;&lt;/ol&gt;&lt;div class=&quot;rca-question&quot;&gt;&lt;b&gt;当前待回答的问题&lt;/b&gt;&lt;span id=&quot;rca-question&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;/aside&gt;
+    &lt;section class=&quot;rca-pane rca-hypotheses&quot; aria-label=&quot;候选假设与证据支持变化&quot;&gt;
+      &lt;div class=&quot;rca-panelhead&quot;&gt;&lt;h2&gt;候选假设&lt;/h2&gt;&lt;span class=&quot;rca-badge&quot;&gt;H1–H3 固定身份&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-support-note&quot;&gt;证据支持分 0–100 · 全部为示意分值 · 非正确率／概率&lt;/div&gt;
+      &lt;div class=&quot;rca-hyp-list&quot; id=&quot;rca-hyp-list&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-update&quot; aria-live=&quot;polite&quot;&gt;&lt;b id=&quot;rca-update-id&quot;&gt;&lt;/b&gt;&lt;span id=&quot;rca-update-text&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-history-head&quot;&gt;&lt;h3&gt;证据到达时，判断如何变化&lt;/h3&gt;&lt;span&gt;无新判断 → 保持分值&lt;/span&gt;&lt;/div&gt;
+      &lt;div id=&quot;rca-history&quot;&gt;&lt;/div&gt;&lt;div class=&quot;rca-legend&quot; id=&quot;rca-legend&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-history-steps&quot; id=&quot;rca-history-steps&quot; aria-label=&quot;调查回放事件&quot;&gt;&lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+  &lt;section class=&quot;rca-pane rca-evidence&quot; aria-label=&quot;选中假设的证据详情&quot;&gt;
+    &lt;div class=&quot;rca-panelhead&quot;&gt;&lt;h2 id=&quot;rca-evidence-title&quot;&gt;&lt;/h2&gt;&lt;span class=&quot;rca-badge&quot; id=&quot;rca-evidence-id&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;rca-evidence-grid&quot;&gt;
+      &lt;div&gt;&lt;div class=&quot;rca-sub&quot; id=&quot;rca-series-title&quot;&gt;&lt;/div&gt;&lt;div id=&quot;rca-series&quot;&gt;&lt;/div&gt;&lt;div class=&quot;rca-legend&quot; id=&quot;rca-series-legend&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;rca-evidence-info&quot;&gt;&lt;div class=&quot;rca-finding&quot;&gt;&lt;strong id=&quot;rca-support-title&quot;&gt;&lt;/strong&gt;&lt;span id=&quot;rca-support&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;rca-finding challenge&quot;&gt;&lt;strong&gt;仍未解释的部分&lt;/strong&gt;&lt;span id=&quot;rca-challenge&quot;&gt;&lt;/span&gt;&lt;/div&gt;&lt;details id=&quot;rca-source-detail&quot;&gt;&lt;summary&gt;查看证据来源与查询范围&lt;/summary&gt;&lt;div class=&quot;rca-source&quot; id=&quot;rca-source&quot;&gt;&lt;/div&gt;&lt;/details&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+  &lt;div class=&quot;rca-final&quot; id=&quot;rca-final&quot;&gt;&lt;strong&gt;最终选择：H1 · shippingservice-1 · read I/O load&lt;/strong&gt;&lt;br&gt;置信度：中（示意） · 结构校验通过 · CPU 与 I/O 的先后关系仍未解决&lt;/div&gt;
+  &lt;footer class=&quot;rca-footer&quot;&gt;&lt;span&gt;调查回放 · 时间、曲线与支持分均为设计数据&lt;/span&gt;&lt;span id=&quot;rca-footer-state&quot;&gt;选择假设可联动查看证据&lt;/span&gt;&lt;/footer&gt;
+  &lt;span class=&quot;rca-sr&quot; id=&quot;rca-announcement&quot; aria-live=&quot;polite&quot;&gt;&lt;/span&gt;
+  &lt;script&gt;
+  (()=&gt;{
+    const root=document.getElementById(&#x27;rca-demo&#x27;);
+    const $=id=&gt;root.querySelector(&#x27;#&#x27;+id);
+    const hypotheses=[
+      {id:&#x27;H1&#x27;,name:&#x27;shippingservice-1&#x27;,reason:&#x27;Container read I/O load&#x27;,color:&#x27;var(--rca-teal)&#x27;},
+      {id:&#x27;H2&#x27;,name:&#x27;shippingservice-1&#x27;,reason:&#x27;Container CPU load&#x27;,color:&#x27;var(--rca-blue)&#x27;},
+      {id:&#x27;H3&#x27;,name:&#x27;node-6&#x27;,reason:&#x27;Node disk read I/O&#x27;,color:&#x27;var(--rca-gold)&#x27;}
+    ];
+    const phases=[[&#x27;解析任务窗口&#x27;,&#x27;Task parser&#x27;],[&#x27;准备遥测数据&#x27;,&#x27;Data processor&#x27;],[&#x27;发现指标异常&#x27;,&#x27;Metrics tools&#x27;],[&#x27;核对 Trace / Logs&#x27;,&#x27;Cross-modal tools&#x27;],[&#x27;定向补查与比较&#x27;,&#x27;Controller → Tools&#x27;],[&#x27;形成答案并校验&#x27;,&#x27;Controller + Verifier&#x27;]];
+    const events=[
+      {id:&#x27;准备&#x27;,label:&#x27;数据就绪&#x27;,done:2,elapsed:&#x27;2.1&#x27;,calls:0,scores:[null,null,null],question:&#x27;哪些组件在目标窗口出现异常？&#x27;,update:&#x27;窗口与实体已识别；候选尚未生成。&#x27;},
+      {id:&#x27;E01&#x27;,label:&#x27;指标&#x27;,done:3,elapsed:&#x27;4.8&#x27;,calls:0,scores:[62,55,52],question:&#x27;局部 Pod 故障，还是整台节点异常？&#x27;,update:&#x27;读 I/O 与 CPU 同时上升，生成 3 个候选假设。&#x27;},
+      {id:&#x27;E02&#x27;,label:&#x27;交叉核对&#x27;,done:4,elapsed:&#x27;10.6&#x27;,calls:1,scores:[62,55,52],question:&#x27;比较同节点其他 Pod，能否区分影响范围？&#x27;,update:&#x27;Trace 延迟缺少机制区分力；三项支持分保持不变。&#x27;},
+      {id:&#x27;E03&#x27;,label:&#x27;定向补查&#x27;,done:5,elapsed:&#x27;18.2&#x27;,calls:1,scores:[78,51,34],question:&#x27;H1 最受支持，但 CPU 是原因还是伴随现象？&#x27;,update:&#x27;其他同节点 Pod 较稳定：H1 +16；节点级 H3 −18。&#x27;},
+      {id:&#x27;E04&#x27;,label:&#x27;答案校验&#x27;,done:6,elapsed:&#x27;26.4&#x27;,calls:2,scores:[78,51,34],question:&#x27;已选择 H1；保留 CPU / I/O 因果顺序的不确定性。&#x27;,update:&#x27;答案格式与证据引用通过校验；校验本身不增加支持分。&#x27;}
+    ];
+    const saved=window.openai?.widgetState;
+    const state={event:3,hypothesis:0,playing:false};
+    const design={history:true,processWidth:28};
+    let timer=null;
+    function applySaved(snapshot){const s=snapshot?.modelContent;if(s?.view===&#x27;rca-demo&#x27;){if(Number.isInteger(s.event)&amp;&amp;s.event&gt;=0&amp;&amp;s.event&lt;events.length)state.event=s.event;const idx=hypotheses.findIndex(h=&gt;h.id===s.hypothesis);if(idx&gt;=0)state.hypothesis=idx;}}
+    applySaved(saved);
+    function persist(){window.openai?.setWidgetState?.({modelContent:{view:&#x27;rca-demo&#x27;,event:state.event,hypothesis:hypotheses[state.hypothesis].id,data:&#x27;illustrative&#x27;},privateContent:null})?.catch(()=&gt;{});}
+    function stop(){state.playing=false;if(timer)clearTimeout(timer);timer=null;}
+    function advance(){if(state.event&gt;=events.length-1){stop();render();return;}state.event++;render();persist();if(state.event&gt;=events.length-1){stop();render();}else if(state.playing)timer=setTimeout(advance,2100);}
+    const svg=(w,h,body,title)=&gt;`&lt;svg class=&quot;rca-chart&quot; viewBox=&quot;0 0 ${w} ${h}&quot; width=&quot;100%&quot; height=&quot;${h}&quot; role=&quot;img&quot; aria-label=&quot;${title}&quot;&gt;&lt;title&gt;${title}&lt;/title&gt;${body}&lt;/svg&gt;`;
+    function drawHistory(){
+      const host=$(&#x27;rca-history&#x27;);host.hidden=!design.history;
+      if(!design.history)return;
+      const w=Math.max(240,host.clientWidth),h=132,left=28,right=42,top=13,bottom=29;
+      const x=i=&gt;left+(w-left-right)*i/3,y=v=&gt;top+(h-top-bottom)*(100-v)/100;
+      let body=[0,50,100].map(v=&gt;`&lt;line x1=&quot;${left}&quot; x2=&quot;${w-right}&quot; y1=&quot;${y(v)}&quot; y2=&quot;${y(v)}&quot; stroke=&quot;var(--rca-line)&quot;/&gt;&lt;text x=&quot;${left-7}&quot; y=&quot;${y(v)+4}&quot; text-anchor=&quot;end&quot;&gt;${v}&lt;/text&gt;`).join(&#x27;&#x27;);
+      events.slice(1).forEach((e,i)=&gt;{body+=`&lt;text x=&quot;${x(i)}&quot; y=&quot;${h-8}&quot; text-anchor=&quot;${i===0?&#x27;start&#x27;:i===3?&#x27;end&#x27;:&#x27;middle&#x27;}&quot;&gt;${e.id}&lt;/text&gt;`;});
+      hypotheses.forEach((hyp,index)=&gt;{
+        const values=events.slice(1,state.event+1).map(e=&gt;e.scores[index]);
+        if(!values.length)return;
+        let path=`M${x(0)},${y(values[0])}`;values.slice(1).forEach((v,i)=&gt;path+=` H${x(i+1)} V${y(v)}`);
+        body+=`&lt;path d=&quot;${path}&quot; fill=&quot;none&quot; stroke=&quot;${hyp.color}&quot; stroke-width=&quot;${state.hypothesis===index?2.6:1.6}&quot; stroke-dasharray=&quot;${index===2?&#x27;4 3&#x27;:&#x27;none&#x27;}&quot;/&gt;`;
+        values.forEach((v,i)=&gt;body+=`&lt;circle cx=&quot;${x(i)}&quot; cy=&quot;${y(v)}&quot; r=&quot;3.2&quot; fill=&quot;var(--rca-panel)&quot; stroke=&quot;${hyp.color}&quot; stroke-width=&quot;1.8&quot;&gt;&lt;title&gt;${hyp.id} / ${events[i+1].id}: ${v} 示意支持分&lt;/title&gt;&lt;/circle&gt;`);
+      });
+      host.innerHTML=svg(w,h,body,&#x27;示意证据支持分随事件变化；只显示当前回放位置之前的判断&#x27;);
+    }
+    function drawEvidence(){
+      const host=$(&#x27;rca-series&#x27;),w=Math.max(235,host.clientWidth),h=157,l=35,r=12,t=14,b=33;
+      const x=i=&gt;l+(w-l-r)*i/30,y=v=&gt;t+(h-t-b)*(100-v)/100;
+      const pod=[12,11,13,12,14,11,14,13,15,13,16,17,24,30,43,55,50,65,60,72,67,70,65,68,54,52,36,22,17,15,13];
+      const cpu=pod.map((v,i)=&gt;Math.max(9,v*.83+(i%3)*3));
+      const control=pod.map((v,i)=&gt;12+(i%4)*1.3+(i&gt;12&amp;&amp;i&lt;27?3:0));
+      const node=pod.map((v,i)=&gt;15+(i%3)*2+(i&gt;11&amp;&amp;i&lt;25?13:0));
+      const primary=state.hypothesis===0?pod:state.hypothesis===1?cpu:node;
+      const color=hypotheses[state.hypothesis].color;
+      const visible=state.event&gt;=1;
+      let body=`&lt;rect x=&quot;${x(12)}&quot; y=&quot;${t}&quot; width=&quot;${x(27)-x(12)}&quot; height=&quot;${h-t-b}&quot; fill=&quot;var(--rca-soft)&quot;/&gt;`;
+      [0,50,100].forEach(v=&gt;body+=`&lt;line x1=&quot;${l}&quot; x2=&quot;${w-r}&quot; y1=&quot;${y(v)}&quot; y2=&quot;${y(v)}&quot; stroke=&quot;var(--rca-line)&quot;/&gt;&lt;text x=&quot;${l-6}&quot; y=&quot;${y(v)+4}&quot; text-anchor=&quot;end&quot;&gt;${v}&lt;/text&gt;`);
+      [0,15,30].forEach(i=&gt;body+=`&lt;text x=&quot;${x(i)}&quot; y=&quot;${h-14}&quot; text-anchor=&quot;${i===0?&#x27;start&#x27;:i===30?&#x27;end&#x27;:&#x27;middle&#x27;}&quot;&gt;09:${String(i).padStart(2,&#x27;0&#x27;)}&lt;/text&gt;`);
+      if(visible){
+        const path=vals=&gt;vals.map((v,i)=&gt;`${i?&#x27;L&#x27;:&#x27;M&#x27;}${x(i)},${y(v)}`).join(&#x27; &#x27;);
+        body+=`&lt;path d=&quot;${path(primary)}&quot; fill=&quot;none&quot; stroke=&quot;${color}&quot; stroke-width=&quot;2.2&quot;/&gt;`;
+        if(state.event&gt;=3)body+=`&lt;path d=&quot;${path(control)}&quot; fill=&quot;none&quot; stroke=&quot;var(--rca-muted)&quot; stroke-width=&quot;1.7&quot; stroke-dasharray=&quot;4 3&quot;/&gt;`;
+      }else body+=`&lt;text x=&quot;${w/2}&quot; y=&quot;${h/2}&quot; text-anchor=&quot;middle&quot;&gt;等待指标证据&lt;/text&gt;`;
+      host.innerHTML=svg(w,h,body,&#x27;示意遥测趋势；横轴为事件时间 UTC+8，纵轴为示意相对值，非实际测量&#x27;);
+      $(&#x27;rca-series-legend&#x27;).innerHTML=`&lt;span style=&quot;--rca-series:${color}&quot;&gt;&lt;i class=&quot;rca-swatch&quot;&gt;&lt;/i&gt;${state.hypothesis===2?&#x27;node-6&#x27;:&#x27;选中 Pod&#x27;}&lt;/span&gt;${state.event&gt;=3?&#x27;&lt;span&gt;┄ 同节点其他 Pod（示意参考）&lt;/span&gt;&#x27;:&#x27;&#x27;}`;
+    }
+    function render(){
+      const ev=events[state.event],prev=events[Math.max(0,state.event-1)],hyp=hypotheses[state.hypothesis];
+      root.querySelector(&#x27;.rca-main&#x27;).style.gridTemplateColumns=root.clientWidth&gt;700?`minmax(210px,${design.processWidth}%) minmax(0,1fr)`:&#x27;1fr&#x27;;
+      $(&#x27;rca-clock&#x27;).innerHTML=`${state.playing?&#x27;▶ 回放中&#x27;:&#x27;回放已暂停&#x27;} · 调查耗时 &lt;strong&gt;+${ev.elapsed} s&lt;/strong&gt;`;
+      $(&#x27;rca-llm&#x27;).innerHTML=`模型轮次 &lt;strong&gt;${ev.calls} / 2&lt;/strong&gt;`;
+      $(&#x27;rca-topstatus&#x27;).innerHTML=`状态 &lt;strong&gt;${state.event===4?&#x27;完成 · 尚未评分&#x27;:&#x27;调查中&#x27;}&lt;/strong&gt;`;
+      $(&#x27;rca-progress&#x27;).textContent=`${ev.done} / 6`;
+      $(&#x27;rca-steps&#x27;).innerHTML=phases.map((p,i)=&gt;`&lt;li class=&quot;rca-step ${i&lt;ev.done?&#x27;done&#x27;:i===ev.done?&#x27;active&#x27;:&#x27;&#x27;}&quot;&gt;&lt;span class=&quot;rca-dot&quot; aria-hidden=&quot;true&quot;&gt;${i&lt;ev.done?&#x27;✓&#x27;:i+1}&lt;/span&gt;&lt;div&gt;&lt;strong&gt;${p[0]}&lt;/strong&gt;&lt;small&gt;${p[1]} · ${i&lt;ev.done?&#x27;已完成&#x27;:i===ev.done?&#x27;进行中&#x27;:&#x27;待开始&#x27;}&lt;/small&gt;&lt;/div&gt;&lt;/li&gt;`).join(&#x27;&#x27;);
+      $(&#x27;rca-question&#x27;).textContent=ev.question;
+      $(&#x27;rca-hyp-list&#x27;).innerHTML=hypotheses.map((item,i)=&gt;{
+        const score=ev.scores[i],last=prev.scores[i],delta=score===null||last===null?&#x27;—&#x27;:score-last===0?&#x27;未改变&#x27;:`${score-last&gt;0?&#x27;+&#x27;:&#x27;&#x27;}${score-last}`;
+        const label=score===null?&#x27;尚未生成&#x27;:state.event&gt;=3?[&#x27;领先 · 仍有不确定性&#x27;,&#x27;仍可解释部分现象&#x27;,&#x27;支持减弱 · 未排除&#x27;][i]:&#x27;待区分&#x27;;
+        return `&lt;button type=&quot;button&quot; class=&quot;rca-hyp ${state.hypothesis===i?&#x27;selected&#x27;:&#x27;&#x27;}&quot; style=&quot;--rca-series:${item.color}&quot; data-hyp=&quot;${i}&quot; aria-pressed=&quot;${state.hypothesis===i}&quot; aria-label=&quot;查看 ${item.id} ${item.name} ${item.reason} 的证据&quot;&gt;&lt;span class=&quot;rca-hypid&quot;&gt;${item.id}&lt;/span&gt;&lt;span&gt;&lt;span class=&quot;rca-hypname&quot;&gt;${score===null?&#x27;候选待发现&#x27;:item.name}&lt;/span&gt;&lt;span class=&quot;rca-hypreason&quot;&gt;${score===null?&#x27;等待指标检测&#x27;:item.reason}&lt;/span&gt;&lt;span class=&quot;rca-bar&quot;&gt;&lt;span style=&quot;width:${score??0}%&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;rca-hypstate&quot;&gt;${label}&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;rca-score&quot;&gt;${score??&#x27;—&#x27;}&lt;small&gt;${delta}&lt;/small&gt;&lt;/span&gt;&lt;/button&gt;`;
+      }).join(&#x27;&#x27;);
+      $(&#x27;rca-update-id&#x27;).textContent=ev.id;
+      $(&#x27;rca-update-text&#x27;).textContent=ev.update;
+      $(&#x27;rca-legend&#x27;).innerHTML=hypotheses.map(h=&gt;`&lt;span style=&quot;--rca-series:${h.color}&quot;&gt;&lt;i class=&quot;rca-swatch&quot;&gt;&lt;/i&gt;${h.id}&lt;/span&gt;`).join(&#x27;&#x27;);
+      root.querySelector(&#x27;.rca-history-head&#x27;).style.display=design.history?&#x27;flex&#x27;:&#x27;none&#x27;;
+      $(&#x27;rca-legend&#x27;).style.display=design.history?&#x27;flex&#x27;:&#x27;none&#x27;;
+      $(&#x27;rca-history-steps&#x27;).innerHTML=events.map((e,i)=&gt;`&lt;button type=&quot;button&quot; class=&quot;rca-eventbtn&quot; data-event=&quot;${i}&quot; aria-pressed=&quot;${state.event===i}&quot;&gt;${e.label}&lt;/button&gt;`).join(&#x27;&#x27;);
+      $(&#x27;rca-evidence-title&#x27;).textContent=`${hyp.id} · ${state.event===0?&#x27;等待证据&#x27;:&#x27;证据检查&#x27;}`;
+      $(&#x27;rca-evidence-id&#x27;).textContent=state.event&gt;=3?&#x27;E01 + E03 · Metrics&#x27;:state.event&gt;=1?&#x27;E01 · Metrics&#x27;:&#x27;暂无证据&#x27;;
+      $(&#x27;rca-series-title&#x27;).textContent=`${state.event===0?&#x27;待查询&#x27;:hyp.name} · 示意相对值（0–100） · 事件时间 UTC+8`;
+      const supports=[
+        state.event&gt;=3?&#x27;读活动异常集中在选中 Pod；同节点其他 Pod 较稳定。&#x27;:&#x27;读活动在目标窗口上升，与 I/O 假设相容。&#x27;,
+        &#x27;同一 Pod 的 CPU 也出现上升，CPU 假设仍有证据支持。&#x27;,
+        state.event&gt;=3?&#x27;同节点其他 Pod 较稳定，削弱“节点普遍受影响”的解释。&#x27;:&#x27;节点级读活动也有波动，需要检查受影响范围。&#x27;
+      ];
+      const challenges=[&#x27;CPU 与 I/O 在同一采样区间上升，尚不能确定谁先发生。&#x27;,&#x27;CPU 可能是 I/O 压力的伴随现象；相关性不能确定因果。&#x27;,&#x27;不同工作负载敏感度不同；其他 Pod 稳定不足以完全排除节点问题。&#x27;];
+      $(&#x27;rca-support-title&#x27;).textContent=state.hypothesis===2&amp;&amp;state.event&gt;=3?&#x27;削弱该假设的观察&#x27;:&#x27;支持该假设的观察&#x27;;
+      $(&#x27;rca-support&#x27;).textContent=state.event===0?&#x27;尚未检索。&#x27;:supports[state.hypothesis];
+      $(&#x27;rca-challenge&#x27;).textContent=state.event===0?&#x27;等待证据后生成假设。&#x27;:challenges[state.hypothesis];
+      $(&#x27;rca-source&#x27;).innerHTML=`&lt;div&gt;来源：设计示意；未加载实际遥测&lt;/div&gt;&lt;div&gt;拟对应工具：metric_series / metric_anomalies&lt;/div&gt;&lt;div&gt;范围：09:00–09:30 UTC+8 · ${state.event===0?&#x27;尚未选择组件&#x27;:hyp.name}&lt;/div&gt;&lt;div&gt;实际接入需保留：证据 ID、原 CMDB ID、KPI、单位、来源文件及查询参数。&lt;/div&gt;`;
+      $(&#x27;rca-final&#x27;).classList.toggle(&#x27;visible&#x27;,state.event===4);
+      $(&#x27;rca-footer-state&#x27;).textContent=state.event===4?&#x27;完成 ≠ 正确 · 结构校验 ≠ 因果验证&#x27;:&#x27;选择假设可联动查看证据&#x27;;
+      $(&#x27;rca-back&#x27;).disabled=state.event===0;$(&#x27;rca-next&#x27;).disabled=state.event===events.length-1;
+      $(&#x27;rca-play&#x27;).textContent=state.playing?&#x27;暂停回放&#x27;:state.event===events.length-1?&#x27;重新回放&#x27;:&#x27;播放回放&#x27;;
+      $(&#x27;rca-announcement&#x27;).textContent=`${ev.label}。${ev.update} 当前选中 ${hyp.id}。`;
+      drawHistory();drawEvidence();
+    }
+    $(&#x27;rca-back&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();state.event=Math.max(0,state.event-1);render();persist();});
+    $(&#x27;rca-next&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{stop();advance();});
+    $(&#x27;rca-play&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{if(state.playing)stop();else{if(state.event===events.length-1)state.event=0;state.playing=true;timer=setTimeout(advance,2100);}render();persist();});
+    $(&#x27;rca-hyp-list&#x27;).addEventListener(&#x27;click&#x27;,e=&gt;{const button=e.target.closest(&#x27;[data-hyp]&#x27;);if(button){state.hypothesis=Number(button.dataset.hyp);render();persist();}});
+    $(&#x27;rca-history-steps&#x27;).addEventListener(&#x27;click&#x27;,e=&gt;{const button=e.target.closest(&#x27;[data-event]&#x27;);if(button){stop();state.event=Number(button.dataset.event);render();persist();}});
+    window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{const next=e.detail?.globals?.widgetState;if(next){const previous=[state.event,state.hypothesis];applySaved(next);if(previous[0]!==state.event||previous[1]!==state.hypothesis){stop();render();}}});
+    const observer=new ResizeObserver(()=&gt;{root.querySelector(&#x27;.rca-main&#x27;).style.gridTemplateColumns=root.clientWidth&gt;700?`minmax(210px,${design.processWidth}%) minmax(0,1fr)`:&#x27;1fr&#x27;;drawHistory();drawEvidence();});observer.observe(root);
+    render();
+    if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addToggle(design,&#x27;history&#x27;,{label:&#x27;显示支持分历史&#x27;});tweak.addSlider(design,&#x27;processWidth&#x27;,{label:&#x27;流程区宽度&#x27;,min:24,max:34,step:1,unit:&#x27;%&#x27;});}
+  })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+
+
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-tabs&quot;&gt;
+(() =&gt; {
+  const selector = &#x27;.nav[role=&quot;tablist&quot;] [role=&quot;tab&quot;]&#x27;;
+  const disabled = &#x27;:disabled,[aria-disabled=&quot;true&quot;]&#x27;;
+  const selectTab = (selected) =&gt; {
+    const panelId = selected.getAttribute(&quot;aria-controls&quot;);
+    for (const tab of selected.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)) {
+      const active = tab === selected;
+      tab.classList.toggle(&quot;active&quot;, active);
+      tab.setAttribute(&quot;aria-selected&quot;, String(active));
+      const id = tab.getAttribute(&quot;aria-controls&quot;);
+      const panel = id &amp;&amp; document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden &amp;&amp; selected.id) {
+          panel.setAttribute(&quot;aria-labelledby&quot;, selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) =&gt; {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === &quot;click&quot;) {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;),
+    ).filter((candidate) =&gt; !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === &quot;ArrowRight&quot; || event.key === &quot;ArrowDown&quot;) {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === &quot;ArrowLeft&quot; || event.key === &quot;ArrowUp&quot;) {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === &quot;Home&quot;) {
+      next = 0;
+    } else if (event.key === &quot;End&quot;) {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll(&#x27;.nav[role=&quot;tablist&quot;]&#x27;)) {
+    const selected =
+      list.querySelector(&#x27;[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;].active&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;]&#x27;);
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener(&quot;click&quot;, interact);
+  document.addEventListener(&quot;keydown&quot;, interact);
+  window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+    document.removeEventListener(&quot;click&quot;, interact);
+    document.removeEventListener(&quot;keydown&quot;, interact);
+  }, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+<script>(() => {
+  const frame = document.getElementById("codex-visualization");
+  if (!(frame instanceof HTMLIFrameElement)) {
+    return;
+  }
+  let viewportHeight = globalThis.innerHeight;
+  const storageKey = `codex:visualization-widget-state-v2:${JSON.stringify([
+    globalThis.location.pathname,
+    globalThis.location.search,
+  ])}`;
+  const parseState = (serializedState) => {
+    if (
+      typeof serializedState !== "string" ||
+      new TextEncoder().encode(serializedState).length > 16 * 1024
+    ) {
+      throw new TypeError(
+        "Widget state must be a JSON object of at most 16 KiB",
+      );
+    }
+    /** @type {unknown} */
+    const state = JSON.parse(serializedState);
+    if (
+      state == null ||
+      typeof state !== "object" ||
+      Array.isArray(state) ||
+      ("imageIds" in state &&
+        (!Array.isArray(state.imageIds) || state.imageIds.length > 0))
+    ) {
+      throw new TypeError("Widget state must be a JSON object");
+    }
+    const storedState = { modelContent: null, privateContent: null, ...state };
+    const canonicalState = JSON.stringify(
+      storedState,
+      (_key, /** @type {unknown} */ value) => {
+        if (typeof value === "number" && !Number.isFinite(value)) {
+          throw new TypeError("Widget state must contain finite numbers");
+        }
+        return value;
+      },
+    );
+    if (new TextEncoder().encode(canonicalState).length > 16 * 1024) {
+      throw new TypeError(
+        "Widget state must be a JSON object of at most 16 KiB",
+      );
+    }
+    return storedState;
+  };
+  let storage = null;
+  let state = null;
+  try {
+    const localStorage = globalThis.localStorage;
+    const probeKey = `${storageKey}:probe`;
+    localStorage.setItem(probeKey, "1");
+    localStorage.removeItem(probeKey);
+    storage = localStorage;
+    const savedState = storage.getItem(storageKey);
+    if (savedState != null) {
+      try {
+        state = parseState(savedState);
+      } catch {
+        // Invalid saved state does not disable future writes.
+      }
+    }
+  } catch {
+    storage = null;
+  }
+  const initialGlobals = {
+    widgetState: state,
+    statePersistence: storage == null ? "none" : "local",
+  };
+
+  const channel = new MessageChannel();
+  channel.port1.addEventListener("message", (event) => {
+    const data = event.data;
+    if (typeof data !== "object" || data == null) {
+      return;
+    }
+    if (data.type === "widget-state-write") {
+      if (!Number.isSafeInteger(data.id) || data.id <= 0) {
+        return;
+      }
+      let ok = false;
+      try {
+        if (storage != null) {
+          const state = parseState(data.state);
+          storage.setItem(storageKey, JSON.stringify(state));
+          ok = true;
+        }
+      } catch {
+        // Storage denial, quota limits, and invalid state return a failed receipt.
+      }
+      channel.port1.postMessage({
+        type: "widget-state-result",
+        id: data.id,
+        ok,
+      });
+      return;
+    }
+    if (data.type === "height") {
+      const height = data.height;
+      if (
+        typeof height === "number" &&
+        Number.isFinite(height) &&
+        height >= 0 &&
+        height <= 10_000
+      ) {
+        frame.style.height = Math.ceil(height) + "px";
+      }
+      return;
+    }
+    if (data.type === "scroll-to") {
+      const top = data.top;
+      if (
+        typeof top === "number" &&
+        Number.isFinite(top) &&
+        top >= 0 &&
+        globalThis.navigator.userActivation?.isActive === true
+      ) {
+        globalThis.scrollTo({
+          top: Math.ceil(
+            globalThis.scrollY + frame.getBoundingClientRect().top + top,
+          ),
+        });
+      }
+      return;
+    }
+    if (data.type === "open-external") {
+      const rawHref = data.href;
+      if (typeof rawHref !== "string") {
+        return;
+      }
+      let href;
+      try {
+        const url = new URL(rawHref, document.baseURI);
+        if (url.protocol !== "https:") {
+          return;
+        }
+        href = url.href;
+      } catch {
+        return;
+      }
+      if (globalThis.navigator.userActivation?.isActive === true) {
+        const anchor = document.createElement("a");
+        anchor.href = href;
+        anchor.rel = "noopener noreferrer";
+        anchor.target = "_blank";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      }
+      return;
+    }
+    if (data.type === "follow-up") {
+      const prompt = data.prompt;
+      if (
+        typeof prompt !== "string" ||
+        globalThis.navigator.userActivation?.isActive !== true
+      ) {
+        return;
+      }
+      const title = data.title;
+      globalThis.prompt(typeof title === "string" ? title : prompt, prompt);
+    }
+  });
+  channel.port1.start();
+  const srcdoc = frame.dataset.srcdoc;
+  if (srcdoc == null) {
+    return;
+  }
+  globalThis.addEventListener("resize", () => {
+    const height = Number.parseFloat(frame.style.height);
+    if (!Number.isFinite(height) || height <= viewportHeight) {
+      frame.style.removeProperty("height");
+    }
+    viewportHeight = globalThis.innerHeight;
+    channel.port1.postMessage({ type: "measure" });
+  });
+  frame.addEventListener(
+    "load",
+    () => {
+      frame.contentWindow?.postMessage(
+        { type: "codex-visualization-initialize" },
+        "*",
+        [channel.port2],
+      );
+    },
+    { once: true },
+  );
+  // Match the trusted bootstrap element, not the same text in an authored title.
+  frame.srcdoc = srcdoc.replace(
+    '<script type="application/json" id="codex-visualization-widget-state">__CODEX_VISUALIZATION_WIDGET_STATE__<\/script>',
+    () =>
+      '<script type="application/json" id="codex-visualization-widget-state">' +
+      JSON.stringify(initialGlobals).replaceAll("<", "\\u003c") +
+      "<\/script>",
+  );
+  delete frame.dataset.srcdoc;
+})();
+</script>
+</body>
+</html>
